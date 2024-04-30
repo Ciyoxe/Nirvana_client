@@ -3,9 +3,8 @@
     --back-col-2: #d7d7d7;
     --back-col-3: #b5b5b5;
 
-    --text-col-1: #d3d0ec;
-    --text-col-2: #434350;
-    --text-col-3: #000000;
+    --text-col-opposite: #d3d0ec;
+    --text-col-normal: #000000;
 
     --accent-col-1: #c9c2f3;
     --accent-col-2: #a5a5ec;
@@ -16,6 +15,7 @@
     --error-col-3: #ac3636;
 
     font-family: sans-serif;
+    color      : var(--text-col-normal);
 }
 
 .flex-row {
@@ -29,7 +29,7 @@
 
 button {
     background    : var(--accent-col-1);
-    color         : var(--text-col-3);
+    color         : var(--text-col-normal);
     border        : none;
     padding       : 0.5rem;
     font-size     : 1.1rem;
@@ -43,7 +43,7 @@ button {
     }
     &:active {
         background : var(--accent-col-3);
-        color      : var(--text-col-1)
+        color      : var(--text-col-opposite)
     }
     &.errored {
         border     : 2px solid var(--error-col-1);
