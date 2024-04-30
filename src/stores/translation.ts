@@ -7,6 +7,14 @@ export const useTranslationStore = defineStore("translation", {
         login    : "Вход в аккаунт",
         register : "Зарегистрироваться",
         logout   : "Выйти из аккаунта",
+
+        error     : "Произошла ошибка, повторите попытку позже.",
+        loading   : "Загрузка...",
+        regSuccess: "Вы успешно зарегистрировались!",
+        logSuccess: "Вы вошли в аккаунт!",
+        authError : "Неверное имя пользователя или пароль.",
+        error429  : "Слишком много попыток входа. Повторите попытку позже.",
+        userExists: "Пользователь с таким именем уже существует.",
     }),
     actions: {
         setLocale(locale: string) {

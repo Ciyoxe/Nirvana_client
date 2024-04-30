@@ -3,8 +3,9 @@ import { useTranslationStore } from '@stores/translation';
 import { reactive, ref } from 'vue';
 
 defineProps<{
-    username_error? : string,
-    password_error? : string
+    usernameError? : string,
+    passwordError? : string,
+    authError?     : string,
 }>();
 const emit = defineEmits<{
     (e: "login", username: string, password: string): void
@@ -41,10 +42,15 @@ const submit = (action: "login" | "register") => {
 
 <template>
 <div class="flex-col panel-3 auth-background">
-    <label for="username">{{ translation.username }}<span class="err-text" v-if="username_error">{{ username_error }}</span></label>
+
+    <div v-if="authError" class="err-text">{{ authError }}</div>
+
+    <label for="username">{{ translation.username }}<span class="err-text" v-if="usernameError">{{ usernameError }}</span></label>
     <input id="username" ref="usernameElement" type="text"     v-model="state.username">
-    <label for="password">{{ translation.password }}<span class="err-text" v-if="password_error">{{ password_error }}</span></label>
+
+    <label for="password">{{ translation.password }}<span class="err-text" v-if="passwordError">{{ passwordError }}</span></label>
     <input id="password" ref="passwordElement" type="password" v-model="state.password">
+
     <button @click="submit('login')">{{ translation.login    }}</button>
     <button @click="submit('register')">{{ translation.register }}</button>
 </div>
@@ -53,6 +59,9 @@ const submit = (action: "login" | "register") => {
 <style scoped lang="scss">
 .err-text {
     color: var(--error-col-2);
+}
+div.err-text {
+    margin-bottom: 15px;
 }
 .auth-background {
     padding: 30px;
