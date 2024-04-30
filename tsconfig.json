@@ -20,7 +20,13 @@
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+        /* Path aliases */
+        "paths": {
+            "@components/*": ["./src/components/*"],
+            "@stores/*": ["./src/stores/*"],
+            "@pages/*": ["./src/pages/*"],
+        }
     },
     "include": [
         "src/**/*.ts",
