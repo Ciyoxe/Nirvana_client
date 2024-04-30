@@ -2,7 +2,7 @@ import { createApp   } from 'vue'
 import { createPinia } from "pinia";
 
 import './normalize.css'
-import './style.css'
+import './style.scss'
 
 import App from './App.vue'
 

@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "pinia": "^2.1.7",
+        "sass": "^1.75.0",
         "vue": "^3.4.19"
     },
     "devDependencies": {

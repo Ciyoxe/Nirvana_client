@@ -4,9 +4,9 @@ export const useTranslationStore = defineStore("translation", {
     state: () => ({
         username : "Имя пользователя",
         password : "Пароль",
-        login    : "Вход",
-        register : "Регистрация",
-        logout   : "Выход",
+        login    : "Вход в аккаунт",
+        register : "Зарегистрироваться",
+        logout   : "Выйти из аккаунта",
     }),
     actions: {
         setLocale(locale: string) {
