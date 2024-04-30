@@ -17,7 +17,7 @@ const state = reactive({
     authError     : undefined as string | undefined,
 });
 
-const login = async (username: string, password: string) => {
+const signup = async (username: string, password: string) => {
     app.setLoading(true);
 
     let usernameValid = false;
@@ -58,7 +58,7 @@ const login = async (username: string, password: string) => {
 
     app.setLoading(false);
 }
-const signup = async (username: string, password: string) => {
+const login = async (username: string, password: string) => {
     app.setLoading(true);
 
     await sendPost("/api/auth/login", {

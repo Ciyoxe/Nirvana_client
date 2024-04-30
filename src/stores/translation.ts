@@ -17,7 +17,7 @@ export const useTranslationStore = defineStore("translation", {
         userExists: "Пользователь с таким именем уже существует.",
     }),
     actions: {
-        setLocale(locale: string) {
+        setLocale(_locale: string) {
             // TODO: load locale from server
         },
     },
