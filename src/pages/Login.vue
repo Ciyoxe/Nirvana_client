@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import Authorization from "../components/Authorization.vue";
-import { sendPost } from "@/utils";
-import { useTranslationStore } from "@stores/translation";
 
+import Authorization from "../components/Authorization.vue";
+
+import { useTranslationStore } from "@stores/translation";
+import { useAppStore         } from "@stores/app";
+
+import { sendPost } from "@/utils";
+
+const app         = useAppStore();
 const translation = useTranslationStore();
+
 const state = reactive({
     usernameError : undefined as string | undefined,
     passwordError : undefined as string | undefined,
@@ -12,6 +18,8 @@ const state = reactive({
 });
 
 const login = async (username: string, password: string) => {
+    app.setLoading(true);
+
     let usernameValid = false;
 
     await sendPost("/api/auth/username-exists", {
@@ -29,6 +37,7 @@ const login = async (username: string, password: string) => {
     });
 
     if (!usernameValid) {
+        app.setLoading(false);
         return;
     }
 
@@ -46,8 +55,12 @@ const login = async (username: string, password: string) => {
             state.authError = translation.error;
         },
     });
+
+    app.setLoading(false);
 }
 const signup = async (username: string, password: string) => {
+    app.setLoading(true);
+
     await sendPost("/api/auth/login", {
         username,
         password
@@ -65,6 +78,8 @@ const signup = async (username: string, password: string) => {
             state.authError = translation.error;
         },
     });
+
+    app.setLoading(false);
 }
 </script>
 
