@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import Login   from '@pages/Login.vue';
 import Loading from '@components/Loading.vue';
 </script>
 
 <template>
     <Loading/>
-    <Login/>
+    <RouterView/>
 </template>
 
 <style scoped>
