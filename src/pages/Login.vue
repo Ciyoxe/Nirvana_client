@@ -6,7 +6,7 @@ import Authorization from "../components/Authorization.vue";
 import { useTranslationStore } from "@stores/translation";
 import { useAppStore         } from "@stores/app";
 
-import { sendPost } from "@/utils";
+import { sendRequest } from "@/utils";
 
 const app         = useAppStore();
 const translation = useTranslationStore();
@@ -22,7 +22,7 @@ const signup = async (username: string, password: string) => {
 
     let usernameValid = false;
 
-    await sendPost("/api/auth/username-exists", {
+    await sendRequest("post", "/api/auth/username-exists", {
         username,
     }, {
         200: (json) => {
@@ -41,7 +41,7 @@ const signup = async (username: string, password: string) => {
         return;
     }
 
-    await sendPost("/api/auth/signup", {
+    await sendRequest("post", "/api/auth/signup", {
         username,
         password
     }, {
@@ -61,7 +61,7 @@ const signup = async (username: string, password: string) => {
 const login = async (username: string, password: string) => {
     app.setLoading(true);
 
-    await sendPost("/api/auth/login", {
+    await sendRequest("post", "/api/auth/login", {
         username,
         password
     }, {
