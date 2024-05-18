@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { sendRequest } from '@/utils';
-import Profiledata from '@components/Profiledata.vue';
 import { reactive } from 'vue';
 import { useRoute } from 'vue-router';
+
+import { sendRequest } from '@/utils';
+
+import Profiledata from '@components/Profiledata.vue';
+import Head from '@components/Head.vue';
 
 const profileId = useRoute().params.id;
 const state     = reactive({
@@ -47,9 +50,14 @@ sendRequest("post", "/api/profile/get-info", { profileId }, {
 </script>
 
 <template>
-<Profiledata :info="state.info" v-if="state.info"/>
+<Head/>
+<main class="flex-col">
+    <Profiledata :info="state.info" v-if="state.info"/>
+</main>
 </template>
 
 <style scoped lang="scss">
-
+main {
+    align-items: center;
+}
 </style>
