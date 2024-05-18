@@ -13,7 +13,8 @@ const router = createRouter({
     history: createWebHistory(),
     routes : [
         { path: '/auth', component: ()=> import('@pages/Login.vue') },
-        { path: '/profile/:id', component: ()=> import('@pages/Profile.vue') }
+        { path: '/profile/:id', component: ()=> import('@pages/Profile.vue') },
+        { path: '/profiles', component: ()=> import('@pages/Profilelist.vue') },
     ]
 });
 

@@ -8,23 +8,7 @@ export async function sendRequest(method: string, url: string, data: object, han
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
-    });
-
-    let json = {};
-    try {
-        json = await res.json();
-    } 
-    catch (_) {};
-
-    if (handler[res.status])
-        handler[res.status](json ?? {});
-    else if (handler["_"])
-        handler["_"](json ?? {});
-}
-export async function sendGet(url: string, handler: ResponseHandler) {
-    const res = await fetch(url, {
-        method: "get",
+        body: method === "get" ? undefined : JSON.stringify(data)
     });
 
     let json = {};

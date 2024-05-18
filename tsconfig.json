@@ -24,6 +24,7 @@
         /* Path aliases */
         "paths": {
             "@components/*": ["./src/components/*"],
+            "@uiblocks/*": ["./src/uiblocks/*"],
             "@stores/*": ["./src/stores/*"],
             "@pages/*": ["./src/pages/*"],
             "@/*": ["./src/*"],
