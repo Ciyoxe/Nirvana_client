@@ -6,6 +6,7 @@ import { sendRequest } from '@/utils';
 
 import Head  from '@components/Head.vue';
 import Popup from '@uiblocks/Popup.vue';
+import Imageupload from "@uiblocks/Imageupload.vue";
 
 const router = useRouter();
 
@@ -55,7 +56,7 @@ const deleteProfile = (profileId: string) => {
 const createProfileState = reactive({
     active  : false,
     name    : "",
-    avatar  : null as null | string,
+    avatar  : "",
 });
 const createProfile = () => {
     sendRequest("post", "/api/profile", { name: createProfileState.name, avatar: createProfileState.avatar }, {
@@ -77,12 +78,12 @@ const createProfile = () => {
 <Head/>
 <main class="flex-col">
     <Popup :dimmed="0.5" v-if="createProfileState.active">
-        <div class="flex-col" style="gap: 10px;">
+        <div class="flex-col" style="gap: 10px; width: 400px;">
             <h1>Создание профиля</h1>
             <label>Имя</label>
             <input v-model="createProfileState.name">
             <label>Аватар</label>
-            <input v-model="createProfileState.avatar">
+            <Imageupload @urlinput="createProfileState.avatar = $event;"/>
             <button @click="createProfile()">Создать</button>
             <button @click="createProfileState.active = false">Отмена</button>
         </div>
