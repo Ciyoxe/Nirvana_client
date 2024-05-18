@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive  } from "vue";
+import { useRouter } from "vue-router";
 
-import Authorization from "../components/Authorization.vue";
+import Authorization from "@components/Authorization.vue";
 
 import { useTranslationStore } from "@stores/translation";
 import { useAppStore         } from "@stores/app";
-
-import { sendRequest } from "@/utils";
+import { sendRequest         } from "@/utils";
 
 const app         = useAppStore();
+const router      = useRouter();
 const translation = useTranslationStore();
 
 const state = reactive({
@@ -46,7 +47,8 @@ const signup = async (username: string, password: string) => {
         password
     }, {
         200: () => {
-            window.location.href = "/";
+            app.setLoggedIn(true);
+            router.push("/"); // TODO: Go to self profile or profile list
         },
         429: () => {
             state.authError = translation.error429;
@@ -66,7 +68,8 @@ const login = async (username: string, password: string) => {
         password
     }, {
         200: () => {
-            window.location.href = "/";
+            app.setLoggedIn(true);
+            router.push("/"); // TODO: Go to self profile or profile list
         },
         401: () => {
             state.authError = translation.authError;

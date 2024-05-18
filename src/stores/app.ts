@@ -2,16 +2,16 @@ import { defineStore } from "pinia";
 
 export const useAppStore = defineStore("app", {
     state: () => ({
-        loading       : false,
-        authStatus    : localStorage.getItem("authStatus") === "true",
+        loading  : false,
+        loggedIn : localStorage.getItem("loggedIn") === "true",
     }),
     actions: {
         setLoading(loading: boolean) {
             this.loading = loading;
         },
-        setAuthStatus(status: boolean) {
-            this.authStatus = status;
-            localStorage.setItem("authStatus", status.toString());
+        setLoggedIn(status: boolean) {
+            this.loggedIn = status;
+            localStorage.setItem("loggedIn", status.toString());
         },
     },
 });

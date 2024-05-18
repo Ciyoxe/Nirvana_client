@@ -7,7 +7,7 @@ import { useRouter   } from "vue-router"
 const app    = useAppStore();
 const router = useRouter(); 
 
-if (!app.authStatus) {
+if (!app.loggedIn) {
     router.replace("/auth");
 }
 </script>

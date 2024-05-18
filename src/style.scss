@@ -14,8 +14,11 @@
     --error-col-2: #de4e4e;
     --error-col-3: #ac3636;
 
+    --mark-col-1: #018301;
+
     font-family: sans-serif;
     color      : var(--text-col-normal);
+    background-color: var(--back-col-1);
 }
 
 .flex-row {

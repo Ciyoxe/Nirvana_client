@@ -12,7 +12,8 @@ const app    = createApp(App);
 const router = createRouter({
     history: createWebHistory(),
     routes : [
-        { path: '/', component: () => import('./pages/Login.vue') },
+        { path: '/auth', component: ()=> import('@pages/Login.vue') },
+        { path: '/profile/:id', component: ()=> import('@pages/Profile.vue') }
     ]
 });
 

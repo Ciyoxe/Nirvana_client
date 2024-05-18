@@ -1,3 +1,4 @@
+import { onBeforeUnmount } from "vue";
 
 type ResponseHandler =  { [key: number | string]: (json: any)=> void };
 
@@ -36,4 +37,9 @@ export async function sendGet(url: string, handler: ResponseHandler) {
         handler[res.status](json ?? {});
     else if (handler["_"])
         handler["_"](json ?? {});
+}
+
+export async function useInterval(time: number, fn: ()=> void) {
+    const interval = setInterval(fn, time);
+    onBeforeUnmount(() => clearInterval(interval));
 }
