@@ -2,7 +2,7 @@
 import Loading from '@components/Loading.vue';
 
 import { useAppStore } from '@stores/app';
-import { onMounted, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRouter   } from "vue-router";
 import { sendRequest } from './utils';
 
@@ -15,20 +15,28 @@ if (!app.loggedIn) {
 
 
 
-let eventsRunning = false;
+let eventsRunning = ref(false);
 const subscribeToEvents = () => {
     sendRequest("post", "/api/event/subscribe", {}, {
-        200 : () => eventsRunning = true,
+        200 : () => {
+            console.log("Subscribed to events");
+            eventsRunning.value = true
+        },
     });
 };
 watchEffect(() => {
-    if (app.loggedIn)
+    if (app.loggedIn) {
+        console.log("Logged in");
         subscribeToEvents();
-    else 
-        eventsRunning = false;
+    }
+    else {
+        eventsRunning.value = false;
+    } 
 });
 
-onMounted(async ()=> {
+watchEffect(async () => {
+    if (!eventsRunning)
+        return;
     while (eventsRunning) {
         await sendRequest("get", "/api/event/", {}, {
             200 : (json) => {
