@@ -35,14 +35,7 @@ const nameOfUser = (profileId: string) => {
 };
 const sendMessage = (text: string) => {
     sendRequest("post", "/api/chat/send-message", { chatId, text }, {
-        200: (json) => {
-            state.messages.push({
-                id     : json.message,
-                created: new Date().toISOString(),
-                sender : app.profile!,
-                text   : text,
-            })
-        },
+        200: () => { },
         "_": () => {
             state.error = "Произошла ошибка отправки сообщения";
         }
