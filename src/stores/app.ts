@@ -17,6 +17,7 @@ export const useAppStore = defineStore("app", {
     state: () => ({
         loading     : false,
         loggedIn    : localStorage.getItem("loggedIn") === "true",
+        profile     : localStorage.getItem("profile"),
         eventSignal : new Signal<ServerEvent>,
     }),
     actions: {
@@ -24,11 +25,18 @@ export const useAppStore = defineStore("app", {
             this.loading = loading;
         },
         setLoggedIn(status: boolean) {
-            this.loggedIn = status;
             localStorage.setItem("loggedIn", status.toString());
+            this.loggedIn = status;
         },
+        setProfile(profileId: string | null) {
+            if (profileId)
+                localStorage.setItem("profile", profileId);
+            else
+                localStorage.removeItem("profile");
+            this.profile = profileId;
+    },
         newEvent(event: ServerEvent) {
             this.eventSignal.emit(event);
-        }
+        },
     },
 });

@@ -16,7 +16,7 @@ const state = reactive({
     chats: [] as Chat[],
 });
 
-sendRequest("get", "/api/chat/load-chats", { count: 100, offset: 0 }, {
+sendRequest("post", "/api/chat/load-chats", { count: 100, offset: 0 }, {
     200: (json) => {
         state.chats = json.chats;
         state.error = null;

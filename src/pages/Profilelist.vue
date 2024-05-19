@@ -7,8 +7,11 @@ import { sendRequest } from '@/utils';
 import Head  from '@components/Head.vue';
 import Popup from '@uiblocks/Popup.vue';
 import Imageupload from "@uiblocks/Imageupload.vue";
+import { useAppStore } from '@stores/app';
+
 
 const router = useRouter();
+const app    = useAppStore();
 
 type Profile = {
     _id     : string,
@@ -35,6 +38,7 @@ sendRequest("get", "/api/profile/list", {}, {
 const selectProfile = (profileId: string) => {
     sendRequest("post", "/api/profile/active", { profileId }, {
         200: () => {
+            app.setProfile(profileId);
             for (const profile of state.profiles) {
                 profile.active = profile._id === profileId;
             };
@@ -45,6 +49,7 @@ const selectProfile = (profileId: string) => {
 const deleteProfile = (profileId: string) => {
     sendRequest("delete", "/api/profile", { profileId }, {
         200: (json) => {
+            app.setProfile(json.newActive);
             state.profiles = state.profiles.filter((profile) => profile._id !== profileId);
             for (const profile of state.profiles) {
                 profile.active = profile._id === json.newActive;
@@ -61,13 +66,17 @@ const createProfileState = reactive({
 const createProfile = () => {
     sendRequest("post", "/api/profile", { name: createProfileState.name, avatar: createProfileState.avatar }, {
         200: (json) => {
+            const newProfileActive = state.profiles.every(p => !p.active);
             state.profiles.push({
                 _id    : json.profileId,
-                active : state.profiles.every(p => !p.active),
+                active : newProfileActive,
                 name   : createProfileState.name,
                 avatar : createProfileState.avatar,
                 rating : 0,
             });
+            if (newProfileActive) {
+                app.setProfile(json.profileId);
+            }
             createProfileState.active = false;
         },
     });

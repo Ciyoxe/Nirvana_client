@@ -12,9 +12,7 @@ const router = useRouter();
 if (!app.loggedIn) {
     router.replace("/auth");
 }
-else {
-    router.replace("/profiles");
-}
+
 
 
 let eventsRunning = false;
