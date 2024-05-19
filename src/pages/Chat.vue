@@ -4,7 +4,7 @@ import { reactive, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import Head from '@components/Head.vue';
-import { sendRequest } from '@/utils';
+import { sendRequest  } from '@/utils';
 import { useAppStore } from '@stores/app';
 
 const app    = useAppStore();
@@ -25,7 +25,7 @@ const state = reactive({
 const nameOfUser = (profileId: string) => {
     if (state.namesCache[profileId] === undefined) {
         state.namesCache[profileId] = null;
-        sendRequest("post", "/api/user/get-info", { profileId }, {
+        sendRequest("post", "/api/profile/get-info", { profileId }, {
             200: (json) => {
                 state.namesCache[profileId] = json.name;
             },
@@ -56,6 +56,17 @@ sendRequest("post", "/api/chat/load-messages", { chatId, count: 100, offset: 0 }
     "_": () => {
         state.messages = [];
         state.error = "Произошла ошибка получения списка сообщений";
+    }
+});
+
+app.useEvents(event => {
+    if (event.type === "message" && event.chatId === chatId) {
+        state.messages.push({
+            id     : event.id,
+            created: event.created,
+            sender : event.senderId,
+            text   : event.text,
+        });
     }
 });
 </script>

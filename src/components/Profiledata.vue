@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue';
-import { useInterval } from "@/utils";
+import { sendRequest } from "@/utils";
 import Profilemetrics from "@/uiblocks/Profilemetrics.vue";
+import { useRoute, useRouter } from 'vue-router';
 
+const router    = useRouter();
+const profileId = useRoute().params.id;
 const props = defineProps<{
     info: {
         self        : boolean,
@@ -47,7 +50,13 @@ const lastOnlineStatus = computed(() => {
     return "В сети давно"
 });
 
-useInterval(1000 * 30, ()=> state.lastOnline = new Date(props.info.online));
+const createChat = () => {
+    sendRequest("post", "/api/chat/personal", { profileId }, {
+        200: (json) => {
+            router.push(`/chat/${json.chatId}`);
+        }
+    });
+};
 </script>
 
 <template>
@@ -62,7 +71,7 @@ useInterval(1000 * 30, ()=> state.lastOnline = new Date(props.info.online));
                 <span class="status" :style="{ color: lastOnlineStatus === 'Онлайн' ? 'var(--mark-col-1)' : 'var(--text-col-normal)' }">{{ lastOnlineStatus }}</span>
             </div>
             <div class="controls">
-                <button v-if="!info.self && !info.isBlocked">Написать</button>
+                <button @click="createChat()" v-if="!info.self && !info.isBlocked">Написать</button>
                 <button v-if="!info.self && !info.isBlocked">{{ info.isFollowing ? 'Отписаться' : 'Подписаться' }}</button>
                 <button v-if="!info.self">{{ info.isBlocked ? 'Разблокировать' : 'Заблокировать' }}</button>
                 <button v-if="info.self">Редактировать</button>

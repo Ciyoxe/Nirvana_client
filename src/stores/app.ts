@@ -1,7 +1,9 @@
 import { Signal } from "@/utils";
 import { defineStore } from "pinia";
+import { onBeforeUnmount } from "vue";
 
-type ServerEvent = {
+export type ServerEvent = {
+    id       : string,
     type     : "message",
     senderId : string,
     chatId   : string,
@@ -18,7 +20,7 @@ export const useAppStore = defineStore("app", {
         loading     : false,
         loggedIn    : localStorage.getItem("loggedIn") === "true",
         profile     : localStorage.getItem("profile"),
-        eventSignal : new Signal<ServerEvent>,
+        eventSignal : new Signal<ServerEvent>(),
     }),
     actions: {
         setLoading(loading: boolean) {
@@ -34,9 +36,13 @@ export const useAppStore = defineStore("app", {
             else
                 localStorage.removeItem("profile");
             this.profile = profileId;
-    },
+        },
         newEvent(event: ServerEvent) {
             this.eventSignal.emit(event);
         },
+        useEvents(handler: (event: ServerEvent)=> void) {
+            this.eventSignal.add(handler);
+            onBeforeUnmount(() => this.eventSignal.remove(handler));
+        }
     },
 });
