@@ -22,36 +22,34 @@ if (route.path === "/") {
     router.replace("/profiles");
 }
 
-let eventsRunning = ref(false);
-const subscribeToEvents = () => {
+const eventsRunning = ref(false);
+
+setInterval(() => {
+    if (eventsRunning.value || !app.loggedIn || app.profile === null)
+        return;
     sendRequest("post", "/api/event/subscribe", {}, {
         200 : () => {
-            console.log("Subscribed to events");
             eventsRunning.value = true
         },
     });
-};
-watchEffect(() => {
-    if (app.loggedIn) {
-        console.log("Logged in");
-        subscribeToEvents();
-    }
-    else {
+}, 5000);
+
+watchEffect(()=> {
+    if (!app.loggedIn || app.profile === null)
         eventsRunning.value = false;
-    } 
 });
 
 watchEffect(async () => {
-    if (!eventsRunning)
+    if (!eventsRunning.value || !app.loggedIn || app.profile === null)
         return;
-    while (eventsRunning) {
+    while (eventsRunning.value && app.loggedIn && app.profile !== null) {
         await sendRequest("post", "/api/event/consume", {}, {
             200 : (json) => {
                 for (const event of json.events) {
                     app.newEvent(event);
                 }
             },
-            "_" : () => setTimeout(subscribeToEvents, 5000)
+            "_" : () => eventsRunning.value = false
         });
     }
 });

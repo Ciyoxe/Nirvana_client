@@ -19,6 +19,8 @@ const router = createRouter({
 
         { path: '/chat/:id', component: ()=> import('@pages/Chat.vue') },
         { path: '/chats', component: ()=> import('@pages/Chatlist.vue') },
+
+        { path: '/anonchat', component: ()=> import('@pages/Anonchat.vue') },
     ]
 });
 

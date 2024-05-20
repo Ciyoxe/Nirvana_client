@@ -11,7 +11,7 @@
         <div @click="$router.push('/chats')">
             Диалоги
         </div>
-        <div @click="$router.push('/anon-chat')">
+        <div @click="$router.push('/anonchat')">
             Чат
         </div>
         <div @click="$router.push('/settings')">
