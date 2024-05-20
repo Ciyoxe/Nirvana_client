@@ -6,32 +6,30 @@ import { useRoute } from 'vue-router';
 import Head from '@components/Head.vue';
 import { sendRequest  } from '@/utils';
 import { useAppStore } from '@stores/app';
+import { useCacheStore } from '@stores/cache';
 
 const app    = useAppStore();
+const cache  = useCacheStore();
 const chatId = useRoute().params.id;
 
 
 type message = {
     id      : string,
     text    : string,
-    sender  : string,
+    sender  : string | null,
     created : string,
 };
 const state = reactive({
-    namesCache : {} as { [key: string]: string | null },
     error      : null as string | null,
     messages   : [] as message[],
 });
-const nameOfUser = (profileId: string) => {
-    if (state.namesCache[profileId] === undefined) {
-        state.namesCache[profileId] = null;
-        sendRequest("post", "/api/profile/get-info", { profileId }, {
-            200: (json) => {
-                state.namesCache[profileId] = json.name;
-            },
-        });
-    }
-    return toRef(state.namesCache, profileId);
+const nameOfUser = (profileId: string | null) => {
+    if (profileId === null) 
+        return toRef("Cобеседник");
+    return toRef(() => {
+        const profile = cache.loadProfile(profileId);
+        return profile.value === null ? null : profile.value.name;
+    });
 };
 const sendMessage = (text: string) => {
     sendRequest("post", "/api/chat/send-message", { chatId, text }, {

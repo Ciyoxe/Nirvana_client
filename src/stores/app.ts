@@ -5,7 +5,7 @@ import { onBeforeUnmount } from "vue";
 export type ServerEvent = {
     id       : string,
     type     : "message",
-    senderId : string,
+    senderId : string | null,
     chatId   : string,
     created  : string,
     text     : string,
