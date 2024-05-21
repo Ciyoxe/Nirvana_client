@@ -3,22 +3,17 @@ import Loading from '@components/Loading.vue';
 
 import { useAppStore } from '@stores/app';
 import { ref, watchEffect } from 'vue';
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { sendRequest } from './utils';
 
 const app    = useAppStore();
-const route  = useRoute();
 const router = useRouter(); 
 
 if (!app.loggedIn) {
-    //router.replace("/auth");
+    router.replace("/auth");
 }
 else
 if (app.profile === null) {
-    router.replace("/profiles");
-}
-else
-if (route.path === "/") {
     router.replace("/profiles");
 }
 

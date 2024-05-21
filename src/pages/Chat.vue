@@ -25,7 +25,7 @@ const state = reactive({
 });
 const nameOfUser = (profileId: string | null) => {
     if (profileId === null) 
-        return toRef("Cобеседник");
+        return "Cобеседник";
     return toRef(() => {
         const profile = cache.loadProfile(profileId);
         return profile.value === null ? null : profile.value.name;
@@ -45,7 +45,6 @@ sendRequest("post", "/api/chat/load-messages", { chatId, count: 100, offset: 0 }
         state.error = null;
     },
     "_": () => {
-        state.messages = [];
         state.error = "Произошла ошибка получения списка сообщений";
     }
 });
@@ -64,18 +63,54 @@ app.useEvents(event => {
 
 <template>
 <Head/>
-<main class="flex-col">
+<main class="flex-col panel-2 main-cont">
     <h1>Чат</h1>
-    <div class="chat-list">
-        <div v-for="message in state.messages">
-            {{ nameOfUser(message.sender) }}
-            {{ message.text }}
+    <div class="message-list flex-col">
+        <div v-for="message in state.messages" class="message-cont" :class="app.profile && message.sender === app.profile ? 'self-cont' : 'chat-cont'">
+            <div class="message flex-col" :class="app.profile && message.sender === app.profile ? 'self-msg' : 'chat-msg'">
+                <a :href="message.sender === null ? undefined : `/profile/${message.sender}`">
+                    {{ nameOfUser(message.sender) }}:
+                </a>
+                <span>
+                    {{ message.text }}
+                </span>
+            </div>
         </div>
+    </div>
+    <div class="chat-controls flex-row">
         <input type="text" @keydown.enter="sendMessage(($event as any).target.value); ($event as any).target.value = ''"/>
     </div>
 </main>
 </template>
 
 <style scoped lang="scss">
-
+a {
+    color: var(--text-col-accent)
+}
+.message-list {
+    box-shadow: inset 0 18px 20px -20px #0003, inset 0 -18px 20px -20px #0003;
+    flex: 1;
+    gap: 5px;
+    overflow-y: scroll;
+}
+.message-cont {
+    display: flex;
+    flex-direction: row;
+}
+.self-cont {
+    padding-inline-end: 5px;
+    flex-direction: row-reverse;
+}
+.chat-cont {
+    flex-direction: row;
+}
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--back-col-2);
+    max-width: 80%;
+}
+.chat-controls {
+    padding-top: 20px;
+}
 </style>

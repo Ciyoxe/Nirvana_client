@@ -33,31 +33,6 @@ const deleteChat = (chatId: string) => {
         },
     });
 }
-
-
-state.chats = [
-    {
-        id: "1",
-        name: "Новый диалог",
-        type: "personal",
-        preview: "Тестовый диалог",
-        lastDate: "2022-01-01 00:00:00",
-    },
-    {
-        id: "2",
-        name: "Новый диалог",
-        type: "personal",
-        preview: "Тестовый диалог",
-        lastDate: "2022-01-01 00:00:00",
-    },
-    {
-        id: "3",
-        name: "Новый диалог",
-        type: "personal",
-        preview: "Тестовый диалог",
-        lastDate: "2022-01-01 00:00:00",
-    },
-];
 </script>
 
 <template>
@@ -86,8 +61,7 @@ state.chats = [
     gap: 10px;
     overflow-y: scroll;
 
-    box-shadow: inset 0 0 20px 1px #0002;
-    border-radius: 10px 0 0 10px;
+    box-shadow: inset 0 18px 20px -20px #0003, inset 0 -18px 20px -20px #0003;
 }
 .chat-item {
     align-items: center;

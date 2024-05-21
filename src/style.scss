@@ -4,10 +4,11 @@
     --back-col-3: #b5b5b5;
 
     --text-col-opposite: #d3d0ec;
+    --text-col-accent: #0c559d;
     --text-col-normal: #000000;
 
-    --accent-col-1: #c9c2f3;
-    --accent-col-2: #6e78cc;
+    --accent-col-1: #c2eaf3;
+    --accent-col-2: #6eadcc;
 
     --neg-col: #de4e4e;
     --pos-col: #018301;
@@ -88,7 +89,7 @@ input {
 }
 .main-cont {
     border-radius: 10px;
-    
+
     flex: 1;
     min-height: 0;
 
