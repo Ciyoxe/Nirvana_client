@@ -17,7 +17,9 @@ defineProps<{
     position: fixed;
     top: 0;
     left: 0;
-    width: 100dvw;
+    width : 100vw;
+    width : 100dvw;
+    height: 100vh;
     height: 100dvh;
     background-color: rgba(0, 0, 0);
     z-index: 10;

@@ -22,7 +22,6 @@ sendRequest("post", "/api/chat/load-chats", { count: 100, offset: 0 }, {
         state.error = null;
     },
     "_": () => {
-        state.chats = [];
         state.error = "Ошибка получения списка диалогов";
     },
 });
@@ -63,32 +62,41 @@ state.chats = [
 
 <template>
 <Head/>
-<main class="flex-col">
+<main class="flex-col panel-2 main-cont">
     <h1>Диалоги</h1>
-    <div class="flex-col list">
-        <div v-for="chat in personalChats" class="flex-row" @click="$router.push(`/chat/${chat.id}`)">
-            <h3>
-                {{ chat.name }}
-            </h3>
-            {{ chat.preview }}
-            <button @click="deleteChat(chat.id)"> удалить </button>
+    <div class="flex-col chat-list">
+        <div v-for="chat in personalChats" class="flex-row chat-item" @click="$router.push(`/chat/${chat.id}`)">
+            <div class="flex-col">
+                <span class="chat-name">
+                    {{ chat.name }}
+                </span>
+                {{ chat.preview }}
+            </div>
+            <div class="flex-row chat-right-block">
+                {{ chat.lastDate }}
+                <button role="button" class="delete-btn" title="Удалить диалог" @click="deleteChat(chat.id)"></button>
+            </div>
         </div>
     </div>
 </main>
 </template>
 
 <style scoped lang="scss">
-main {
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-img {
-    width: 50px;
-    height: 50px;
-}
-.list {
+.chat-list {
     gap: 10px;
+    overflow-y: scroll;
+
+    box-shadow: inset 0 0 20px 1px #0002;
+    border-radius: 10px 0 0 10px;
+}
+.chat-item {
+    align-items: center;
+    justify-content: space-between;
+
+    border: 2px solid var(--back-col-2);
+    border-radius: 10px 0 0 10px;
+
+    padding: 5px;
 }
 .create-profile-dim {
     position: absolute;
@@ -106,5 +114,21 @@ img {
     background-color: var(--back-col-1);
     position: absolute;
     gap: 10px;
+}
+.delete-btn {
+    background-image: url('/assets/delete.svg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    width: 40px;
+    height: 40px;
+}
+.chat-name {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+.chat-right-block {
+    gap: 15px;
+    align-items: center;
 }
 </style>

@@ -11,7 +11,7 @@ const route  = useRoute();
 const router = useRouter(); 
 
 if (!app.loggedIn) {
-    router.replace("/auth");
+    //router.replace("/auth");
 }
 else
 if (app.profile === null) {
