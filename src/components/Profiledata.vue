@@ -68,7 +68,7 @@ const createChat = () => {
         <div class="head flex-row">
             <div class="flex-col">
                 <span class="name">{{ info.name }}</span> <br>
-                <span class="status" :style="{ color: lastOnlineStatus === 'Онлайн' ? 'var(--mark-col-1)' : 'var(--text-col-normal)' }">{{ lastOnlineStatus }}</span>
+                <span class="status" :style="{ color: lastOnlineStatus === 'Онлайн' ? 'var(--pos-col)' : 'var(--text-col-normal)' }">{{ lastOnlineStatus }}</span>
             </div>
             <div class="controls">
                 <button @click="createChat()" v-if="!info.self && !info.isBlocked">Написать</button>

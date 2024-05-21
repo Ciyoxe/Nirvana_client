@@ -11,7 +11,7 @@ defineEmits<{
 
 <template>
 <div class="flex-row rating">
-    <div class="info-content" :style="{ color: rating < 0 ? 'var(--error-col-3)' : rating > 0 ? 'var(--mark-col-1)' : 'var(--text-col-normal)' }">
+    <div class="info-content" :style="{ color: rating < 0 ? 'var(--neg-col)' : rating > 0 ? 'var(--pos-col)' : 'var(--text-col-normal)' }">
         {{ rating < 0 ? "-" : "+" }}{{ Math.abs(rating).toFixed(0) }}
     </div>
     <div role="button" class="vote up" @click="$emit('vote-up')" v-if="editable"></div>
@@ -38,7 +38,7 @@ defineEmits<{
     mask-image: url('/assets/up.svg');
 
     &:hover, &:active {
-        background-color: var(--mark-col-1);
+        background-color: var(--pos-col);
     }
 }
 .down {
@@ -46,7 +46,7 @@ defineEmits<{
     mask-image: url('/assets/down.svg');
 
     &:hover, &:active {
-        background-color: var(--error-col-3);
+        background-color: var(--neg-col);
     }
 }
 </style>

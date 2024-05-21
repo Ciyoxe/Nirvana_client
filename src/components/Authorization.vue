@@ -58,7 +58,7 @@ const submit = (action: "login" | "register") => {
 
 <style scoped lang="scss">
 .err-text {
-    color: var(--error-col-2);
+    color: var(--neg-col);
 }
 div.err-text {
     margin-bottom: 15px;

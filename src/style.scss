@@ -7,17 +7,13 @@
     --text-col-normal: #000000;
 
     --accent-col-1: #c9c2f3;
-    --accent-col-2: #a5a5ec;
-    --accent-col-3: #6e78cc;
+    --accent-col-2: #6e78cc;
 
-    --error-col-1: #ff5858;
-    --error-col-2: #de4e4e;
-    --error-col-3: #ac3636;
+    --neg-col: #de4e4e;
+    --pos-col: #018301;
 
-    --mark-col-1: #018301;
-
-    font-family: sans-serif;
-    color      : var(--text-col-normal);
+    font-family     : sans-serif;
+    color           : var(--text-col-normal);
     background-color: var(--back-col-1);
 }
 
@@ -37,7 +33,7 @@ button {
     padding       : 0.5rem;
     font-size     : 1.1rem;
     border-radius : 10px;
-    border        : 2px solid var(--accent-col-3);
+    border        : 2px solid var(--accent-col-2);
 
     transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
 
@@ -45,11 +41,11 @@ button {
         background : var(--accent-col-2);
     }
     &:active {
-        background : var(--accent-col-3);
+        background : var(--accent-col-2);
         color      : var(--text-col-opposite)
     }
     &.errored {
-        border     : 2px solid var(--error-col-1);
+        border     : 2px solid var(--neg-col);
     }
     &:disabled {
         opacity: 0.5;
@@ -66,7 +62,7 @@ input {
     transition: border 0.2s ease;
 
     &.errored {
-        border : 2px solid var(--error-col-1);
+        border : 2px solid var(--neg-col);
     }
 }
 
