@@ -27,21 +27,6 @@ const state     = reactive({
     },
 });
 
-state.info = {
-    self        : false,
-    name        : "NAME",
-    about       : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur cursus, nisl nisl aliquet nisl, eget aliquet nisl nisl",
-    avatar      : "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.PYipJ_hSncugM2SwnZitvgHaEK%26pid%3DApi&sp=1715856581T14ae9d24c0f9c9e6b620ed8897fe5f67b9d5184120308c0b4ac643085ca3c28d",
-    banner      : "https://img.freepik.com/free-photo/fresh-autumn-leaves-reveal-vibrant-organic-pattern-generated-by-ai_188544-15037.jpg?t=st=1716015376~exp=1716015976~hmac=a68ff37e270fdd34fdd6a183221d74b0b56a12fc3603b98164208d2fca69ded4",
-    created     : "2023-01-15T10:30:00.000Z",
-    online      : "2024-05-16T12:00:43.766Z",
-    role        : "user",
-    rating      : 5,
-    following   : 10,
-    followers   : 15,
-    isFollowing : false,
-    isBlocked   : false,
-}
 const lastOnlineStatus = computed(() => {
     if (!state.info)
         return "В сети: неизвестно";

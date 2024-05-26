@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { reactive, toRef } from 'vue';
+import { reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
 import Head from '@components/Head.vue';
@@ -23,14 +23,6 @@ const state = reactive({
     error      : null as string | null,
     messages   : [] as message[],
 });
-const nameOfUser = (profileId: string | null) => {
-    if (profileId === null) 
-        return "Cобеседник";
-    return toRef(() => {
-        const profile = cache.loadProfile(profileId);
-        return profile.value === null ? null : profile.value.name;
-    });
-};
 const sendMessage = (text: string) => {
     sendRequest("post", "/api/chat/send-message", { chatId, text }, {
         200: () => { },
@@ -69,7 +61,7 @@ app.useEvents(event => {
         <div v-for="message in state.messages" class="message-cont" :class="app.profile && message.sender === app.profile ? 'self-cont' : 'chat-cont'">
             <div class="message flex-col" :class="app.profile && message.sender === app.profile ? 'self-msg' : 'chat-msg'">
                 <a :href="message.sender === null ? undefined : `/profile/${message.sender}`">
-                    {{ nameOfUser(message.sender) }}:
+                    {{ message.sender === null ? "Собеседник" : cache.loadProfile(message.sender).value?.name }}:
                 </a>
                 <span>
                     {{ message.text }}
