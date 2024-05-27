@@ -49,7 +49,7 @@ const deleteChat = (chatId: string) => {
             </div>
             <div class="flex-row chat-right-block">
                 {{ chat.lastDate }}
-                <button role="button" class="delete-btn" title="Удалить диалог" @click="deleteChat(chat.id)"></button>
+                <button class="delete-btn" title="Удалить диалог" @click="deleteChat(chat.id)"></button>
             </div>
         </div>
     </div>

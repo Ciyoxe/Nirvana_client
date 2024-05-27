@@ -3,6 +3,7 @@ import { reactive  } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { sendRequest } from '@/utils';
+import Userpreview from '@uiblocks/Userpreview.vue';
 
 import Head  from '@components/Head.vue';
 import Popup from '@uiblocks/Popup.vue';
@@ -31,7 +32,6 @@ sendRequest("get", "/api/profile/list", {}, {
         state.error    = null;
     },
     "_": () => {
-        state.profiles = [];
         state.error    = "Произошла ошибка получения профилей";
     },
 });
@@ -85,7 +85,7 @@ const createProfile = () => {
 
 <template>
 <Head/>
-<main class="flex-col">
+<main class="flex-col panel-2 main-cont">
     <Popup :dimmed="0.5" v-if="createProfileState.active">
         <div class="flex-col" style="gap: 10px; width: 400px;">
             <h1>Создание профиля</h1>
@@ -99,10 +99,13 @@ const createProfile = () => {
     </Popup>
     <h1>Профили</h1>
     <div class="flex-col list">
-        <div v-for="profile in state.profiles" class="flex-row">
-            <img :src="profile.avatar ?? ''" alt="avatar"> {{ profile.name }} {{ profile.rating }} {{ profile.active }}
-            <button @click="selectProfile(profile._id)"> выбрать </button>
-            <button @click="deleteProfile(profile._id)"> удалить </button>
+        <div v-for="profile in state.profiles" class="flex-row list-item" @click="selectProfile(profile._id)">
+            <Userpreview
+                :avatar="profile.avatar"
+                :username="profile.name"
+                :rating="profile.rating"
+            />
+            <button class="delete-btn" @click="deleteProfile(profile._id)"></button>
         </div>
     </div>
     <button @click="createProfileState.active = true">Создать</button>
@@ -110,17 +113,24 @@ const createProfile = () => {
 </template>
 
 <style scoped lang="scss">
-main {
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
 img {
     width: 50px;
     height: 50px;
 }
 .list {
     gap: 10px;
+    overflow-y: scroll;
+
+    box-shadow: inset 0 18px 20px -20px #0003, inset 0 -18px 20px -20px #0003;
+}
+.list-item {
+    align-items: center;
+    justify-content: space-between;
+
+    border: 2px solid var(--back-col-2);
+    border-radius: 10px 0 0 10px;
+
+    padding: 5px;
 }
 .create-profile-dim {
     position: absolute;
@@ -138,5 +148,13 @@ img {
     background-color: var(--back-col-1);
     position: absolute;
     gap: 10px;
+}
+.delete-btn {
+    background-image: url('/assets/delete.svg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    width: 40px;
+    height: 40px;
 }
 </style>
