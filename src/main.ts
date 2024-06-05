@@ -1,15 +1,17 @@
-import { createApp    } from 'vue'
-import { createPinia  } from "pinia";
+import { createApp     } from 'vue'
+import { createPinia   } from "pinia"
+import { createVuetify } from 'vuetify'
 import { createRouter, createWebHistory } from "vue-router";
-
+import 'vuetify/styles'
 import './normalize.css'
 import './style.scss'
 
 import App from './App.vue'
 
-const pinia  = createPinia();
-const app    = createApp(App);
-const router = createRouter({
+const app     = createApp(App);
+const pinia   = createPinia();
+const vuetify = createVuetify({ });
+const router  = createRouter({
     history: createWebHistory(),
     routes : [
         { path: '/auth', component: ()=> import('@pages/Login.vue') },
@@ -25,6 +27,7 @@ const router = createRouter({
 });
 
 app
+.use(vuetify)
 .use(router)
 .use(pinia)
 .mount('#app');
