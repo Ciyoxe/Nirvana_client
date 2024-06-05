@@ -58,8 +58,8 @@ app.useEvents(event => {
 <main class="flex-col panel-2 main-cont">
     <h1>Чат</h1>
     <div class="message-list flex-col">
-        <div v-for="message in state.messages" class="message-cont" :class="app.profile && message.sender === app.profile ? 'self-cont' : 'chat-cont'">
-            <div class="message flex-col" :class="app.profile && message.sender === app.profile ? 'self-msg' : 'chat-msg'">
+        <div v-for="message in state.messages" class="message-cont" :class="app.profileId && message.sender === app.profileId ? 'self-cont' : 'chat-cont'">
+            <div class="message flex-col" :class="app.profileId && message.sender === app.profileId ? 'self-msg' : 'chat-msg'">
                 <a :href="message.sender === null ? undefined : `/profile/${message.sender}`">
                     {{ message.sender === null ? "Собеседник" : cache.loadProfile(message.sender).value?.name }}:
                 </a>

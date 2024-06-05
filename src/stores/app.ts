@@ -19,7 +19,7 @@ export const useAppStore = defineStore("app", {
     state: () => ({
         loading     : false,
         loggedIn    : localStorage.getItem("loggedIn") === "true",
-        profile     : localStorage.getItem("profile"),
+        profileId   : localStorage.getItem("profileId"),
         eventSignal : new Signal<ServerEvent>(),
     }),
     actions: {
@@ -32,10 +32,10 @@ export const useAppStore = defineStore("app", {
         },
         setProfile(profileId: string | null) {
             if (profileId)
-                localStorage.setItem("profile", profileId);
+                localStorage.setItem("profileId", profileId);
             else
-                localStorage.removeItem("profile");
-            this.profile = profileId;
+                localStorage.removeItem("profileId");
+            this.profileId = profileId;
         },
         newEvent(event: ServerEvent) {
             this.eventSignal.emit(event);

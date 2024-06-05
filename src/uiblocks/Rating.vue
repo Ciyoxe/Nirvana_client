@@ -21,7 +21,7 @@ defineEmits<{
 
 <style scoped lang="scss">
 .rating {
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 }
 .vote {

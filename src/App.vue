@@ -11,7 +11,7 @@ if (!app.loggedIn) {
     router.replace("/auth");
 }
 else
-if (app.profile === null) {
+if (app.profileId === null) {
     router.replace("/profiles");
 }
 
