@@ -1,6 +1,7 @@
 import { createApp     } from 'vue'
 import { createPinia   } from "pinia"
 import { createVuetify } from 'vuetify'
+import { aliases, mdi  } from 'vuetify/iconsets/mdi-svg';
 import { createRouter, createWebHistory } from "vue-router";
 import 'vuetify/styles'
 import './normalize.css'
@@ -10,7 +11,12 @@ import App from './App.vue'
 
 const app     = createApp(App);
 const pinia   = createPinia();
-const vuetify = createVuetify({ });
+const vuetify = createVuetify({
+    icons: {
+        aliases,
+        sets: { mdi },
+    }
+});
 const router  = createRouter({
     history: createWebHistory(),
     routes : [

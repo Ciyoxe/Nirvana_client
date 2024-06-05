@@ -52,7 +52,9 @@ type GetListRes = {
         _id    : string,
         active : boolean,
         name   : string,
+        rating : number,
         avatar : string | null,
+        about  : string | null,
     }[]
 }
 
