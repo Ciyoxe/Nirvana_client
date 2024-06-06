@@ -141,14 +141,14 @@ watchEffect(()=> {
     <VBtn :append-icon="mdiPlus" @click="state.createDialog=true">Создать</VBtn>
 </div>
 <VEmptyState v-else
-    headline = "Похоже, здесь пусто"
-    title = "Давайте создадим новый профиль"
+    headline = "Похоже, у вас нет профилей"
+    title = "Давайте создадим новый"
 >
     <VBtn :append-icon="mdiPlus" @click="state.createDialog=true">Создать</VBtn>
 </VEmptyState>
 <VDialog v-model="state.createDialog" max-width="1000px">
-    <input type="file" ref="avatarUpload" style="display: none">
-    <input type="file" ref="bannerUpload" style="display: none">
+    <input type="file" accept="image/*" ref="avatarUpload" style="display: none">
+    <input type="file" accept="image/*" ref="bannerUpload" style="display: none">
     <VCard>
         <VCardTitle>Создание профиля</VCardTitle>
         <VCardText>
