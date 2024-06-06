@@ -1,11 +1,14 @@
 import { sendRequest, ResponseHandler } from "./sendRequest";
+import { Profile, ProfilePreview } from "./types";
 
 type ActionReq = {
     profileId: string,
 }
 type CreateReq = {
     name   : string,
+    about  : string | null,
     avatar : string | null,
+    banner : string | null,
 }
 type UpdateReq = {
     profileId: string,
@@ -26,21 +29,6 @@ type ErrRes = {
 type SuccessRes = {
     success: true
 }
-type GetRes = {
-    self        : boolean,
-    name        : string,
-    about       : string | null,
-    avatar      : string | null,
-    banner      : string | null,
-    created     : Date,
-    online      : Date,
-    role        : "admin" | "user",
-    rating      : number,
-    following   : number,
-    followers   : number,
-    isFollowing : boolean,
-    isBlocked   : boolean;
-};
 type CreateRes = {
     profileId: string,
 }
@@ -48,17 +36,10 @@ type DeleteRes = {
     activeId: string | null,
 }
 type GetListRes = {
-    profiles: {
-        _id    : string,
-        active : boolean,
-        name   : string,
-        rating : number,
-        avatar : string | null,
-        about  : string | null,
-    }[]
+    profiles: ProfilePreview[]
 }
 
-export async function getProfile(req: ActionReq, handler: ResponseHandler<GetRes, ErrRes>) {
+export async function getProfile(req: ActionReq, handler: ResponseHandler<Profile, ErrRes>) {
     await sendRequest("get", `api/profile/${req.profileId}`, {}, handler, 
         (v) => ({ ...v, created: new Date(v.created), online: new Date(v.online) })
     );

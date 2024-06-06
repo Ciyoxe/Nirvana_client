@@ -14,7 +14,7 @@ const profiles = defineModel<{
     default: [],
 });
 const emit = defineEmits<{
-    (e: "deleted", profileId: string): void,
+    (e: "deleted", profileId: string, activeId: string | null): void,
     (e: "selected", profileId: string): void
 }>();
 
@@ -43,9 +43,9 @@ const confirmDeletion = ()=> {
         return;
 
     deleteProfile({ profileId: deletedId }, {
-        200: () => {
+        200: (data) => {
             profiles.value = profiles.value.filter((profile) => profile._id !== deletedId);
-            emit("deleted", deletedId);
+            emit("deleted", deletedId, data.activeId);
         },
         '_': ()=> {
             error("Произошла ошибка удаления профиля, повторите попытку позже");
@@ -66,7 +66,7 @@ const selectProfile = (profileId: string)=> {
 </script>
 
 <template>
-<VList lines="one" width="100%" class="list flex-col">
+<VList lines="one" width="100%" height="100%" class="list flex-col">
     <VListItem v-for="profile of profiles" :key="profile._id" :variant="profile.active ? 'tonal' : undefined" rounded="lg">
         <div class="flex-row" @click="selectProfile(profile._id)">
             <VAvatar size="64" rounded="lg" start :image="profile.avatar ?? ''"/>
