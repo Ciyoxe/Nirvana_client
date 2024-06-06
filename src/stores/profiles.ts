@@ -9,11 +9,7 @@ export const useProfilesStore = defineStore("profiles", {
     actions: {
         setCurrentProfile(id: string | null) {
             this.currentProfileId = id;
-
-            if (id === null)
-                localStorage.setItem("profileId", "");
-            else
-                localStorage.setItem("profileId", id);
+            localStorage.setItem("profileId", id ?? "");
         },
         appendProfile(profile: ProfilePreview) {
             this.userProfiles.push(profile);
