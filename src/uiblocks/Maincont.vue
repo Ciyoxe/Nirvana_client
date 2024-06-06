@@ -27,6 +27,7 @@ import Header from './Header.vue';
 }
 .main-sheet {
     width: 100%;
+    padding: 10px;
     max-width: 1000px;
     border-radius: 0 0 10px 10px;
 }

@@ -133,21 +133,19 @@ watchEffect(()=> {
 </script>
 
 <template>
-<VSheet class="profiles flex-col" width="100%" height="100%" rounded="lg" elevation="5">
-    <div class="flex-col cont" v-if="profiles.userProfiles.length > 0">
-        <h2>Ваши профили:</h2>
-        <div style="flex: 1">
-            <Profilelist v-model="profiles.userProfiles" @deleted="deleteProfile" @selected="selectProfile"/>
-        </div>
-        <VBtn :append-icon="mdiPlus" @click="state.createDialog=true">Создать</VBtn>
+<div class="flex-col cont" v-if="profiles.userProfiles.length > 0">
+    <h2>Ваши профили:</h2>
+    <div style="flex: 1">
+        <Profilelist v-model="profiles.userProfiles" @deleted="deleteProfile" @selected="selectProfile"/>
     </div>
-    <VEmptyState v-else
-        headline = "Похоже, здесь пусто"
-        title = "Давайте создадим новый профиль"
-    >
-        <VBtn :append-icon="mdiPlus" @click="state.createDialog=true">Создать</VBtn>
-    </VEmptyState>
-</VSheet>
+    <VBtn :append-icon="mdiPlus" @click="state.createDialog=true">Создать</VBtn>
+</div>
+<VEmptyState v-else
+    headline = "Похоже, здесь пусто"
+    title = "Давайте создадим новый профиль"
+>
+    <VBtn :append-icon="mdiPlus" @click="state.createDialog=true">Создать</VBtn>
+</VEmptyState>
 <VDialog v-model="state.createDialog" max-width="1000px">
     <input type="file" ref="avatarUpload" style="display: none">
     <input type="file" ref="bannerUpload" style="display: none">

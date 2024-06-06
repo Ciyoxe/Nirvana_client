@@ -15,12 +15,16 @@ const vuetify = createVuetify({
     icons: {
         aliases,
         sets: { mdi },
+    },
+    theme: {
+        defaultTheme: 'light'
     }
 });
 const router  = createRouter({
     history: createWebHistory(),
     routes : [
-        { name: "login", path: '/auth', component: ()=> import('@pages/Login.vue') },
+        { name: "login", path: '/auth/login', component: ()=> import('@pages/Login.vue') },
+        { name: "register", path: '/auth/signup', component: ()=> import('@pages/Login.vue') },
         
         { name: "profile", path: '/profile/:id', component: ()=> import('@pages/Profile.vue') },
         { name: "profiles", path: '/profiles', component: ()=> import('@pages/Profiles.vue') },

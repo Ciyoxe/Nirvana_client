@@ -1,91 +1,108 @@
 <script setup lang="ts">
-import { useTranslationStore } from '@stores/translation';
+import { login, register, userExists } from '@/api/auth';
+import { useAppStore } from '@stores/app';
 import { reactive, ref } from 'vue';
 
-defineProps<{
-    usernameError? : string,
-    passwordError? : string,
-    authError?     : string,
+const app   = useAppStore();
+const props = defineProps<{
+    type: "login" | "register"
 }>();
-const emit = defineEmits<{
-    (e: "login", username: string, password: string): void
-    (e: "register", username: string, password: string): void
-}>();
-
-const translation = useTranslationStore();
 
 const state = reactive({
-    username: "",
-    password: "",
+    username : "",
+    password : "",
+    code     : "", // not used for now
+
+    error    : false,
+    errorText: "",
 });
 
-const usernameElement = ref<HTMLInputElement>();
-const passwordElement = ref<HTMLInputElement>();
+const usernameValidation = [
+    (v: string)=> v.trim().length === 0 ? "Логин не может быть пустым" : true,
+    (v: string)=> v.length > 256 ? "Превышена длина текста" : true,
+];
+const passwordValidation = [
+    (v: string)=> v.length === 0 ? "Пароль не может быть пустым" : true,
+    (v: string)=> v.length > 2048 ? "Превышена длина пароля" : true,
+    (v: string)=> v.length < 5 ? "Пароль слишком короткий" : true,
+];
 
-const submit = (action: "login" | "register") => {
-    let error = false;
-
-    if (state.username.trim().length === 0 && usernameElement.value) {
-        error = true;
-        usernameElement.value.classList.add("errored");
-        setTimeout(() => usernameElement.value?.classList.remove("errored"), 3000);
-    }
-    if (state.password.trim().length === 0 && passwordElement.value) {
-        error = true;
-        passwordElement.value.classList.add("errored");
-        setTimeout(() => passwordElement.value?.classList.remove("errored"), 3000);
-    }
-
-    if (!error) emit(action as any, state.username, state.password);
+const error = (text: string)=> {
+    state.error = true;
+    state.errorText = text;
 }
+const form = ref();
+
+const submit = async ()=> {
+    if (!form.value)
+        return;
+    if (!(await form.value.validate()).valid)
+        return;
+
+    const data = {
+        username: state.username,
+        password: state.password,
+        code    : state.code,
+    };
+
+    app.setLoading(true);
+    if (props.type === "register") {
+        let canRegister = false;
+        await userExists(data, {
+            200: (exists) => {
+                if (exists)
+                    error("Такой пользователь уже существует");
+                else
+                    canRegister = true;
+            },
+            '_': () => error("Произошла ошибка, повторите попытку позже")
+        });
+        if (canRegister) {
+            await register(data, {
+                '_': () => error("Произошла ошибка регистрации, повторите попытку позже")
+            });
+        }
+    }
+    // type == login
+    else {
+        await login(data, {
+            '_': () => error("Произошла ошибка входа, повторите попытку позже")
+        });
+    }
+    app.setLoading(false);
+}
+
 </script>
 
 <template>
-<div class="flex-col panel-3 auth-background">
-
-    <div v-if="authError" class="err-text">{{ authError }}</div>
-
-    <label for="username">{{ translation.username }}<span class="err-text" v-if="usernameError">{{ usernameError }}</span></label>
-    <input id="username" ref="usernameElement" type="text"     v-model="state.username">
-
-    <label for="password">{{ translation.password }}<span class="err-text" v-if="passwordError">{{ passwordError }}</span></label>
-    <input id="password" ref="passwordElement" type="password" v-model="state.password">
-
-    <button @click="submit('login')">{{ translation.login    }}</button>
-    <button @click="submit('register')">{{ translation.register }}</button>
+<div class="flex-col auth-back">
+    <VCardTitle>{{ type === 'login' ? 'Вход в аккаунт' : 'Регистрация' }}</VCardTitle>
+    <VForm ref="form" style="margin-top: 30px;">
+        <VTextField :rules="usernameValidation" v-model="state.username" label="Логин"/>
+        <VTextField :rules="passwordValidation" v-model="state.password" label="Пароль" type="password"/>
+        <VTextField v-if="type === 'register'" v-model="state.code" label="Код регистрации"/>
+    </VForm>
+    <VBtn @click="submit()">{{ type === 'login' ? 'Войти' : 'Зарегистрироваться' }}</VBtn>
+    <RouterLink v-if="type==='register'" to="/auth/login">Уже регистрировались? Войдите в аккаунт</RouterLink>
+    <RouterLink v-else to="/auth/signup">Нет аккаунта? Зарегистируйтесь</RouterLink>
 </div>
+<VSnackbar v-model="state.error" color="error" timeout="3000" rounded="lg">
+    {{ state.errorText }}
+</VSnackbar>
 </template>
 
 <style scoped lang="scss">
-.err-text {
-    color: var(--neg-col);
-}
-div.err-text {
-    margin-bottom: 15px;
-}
-.auth-background {
-    padding: 30px;
-    width: 40%; 
-    border-radius: 10px;
+.auth-back {
+    width : 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 0 10px;
 
-    @media (max-width: 900px) {
-        width: 60%;
-    }
     @media (max-width: 500px) {
-        width: 90%;
-        padding: 20px;
+        padding: 0;
     }
 }
-input, button {
-    margin-bottom: 15px;
-}
-button:nth-of-type(1) {
-    margin-top: 30px;
-}
-label {
-    margin-bottom: 5px;
-}
-span {
-    margin-left: 10px;
+a {
+    margin-top: 20px;
 }
 </style>
