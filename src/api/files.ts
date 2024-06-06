@@ -11,7 +11,7 @@ export async function uploadFile(file: File, handler: ResponseHandler<UploadRes,
     const data = new FormData();
     data.append("file", file);
 
-    await sendFormdata("post", "api/files", data, handler);
+    await sendFormdata("post", "/api/file", data, handler);
 }
 export async function getFile(url: string, handler: ResponseHandler<any, ErrRes>) {
     await sendRequest("get", url, {}, handler);

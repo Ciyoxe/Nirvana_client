@@ -29,3 +29,10 @@ export type ChatPreview = {
     preview  : string | null,
     lastDate : Date,
 }
+export type Message = {
+    id         : string,
+    text       : string,
+    sender     : string | null,
+    senderName : string,
+    created    : Date,
+}

@@ -79,18 +79,18 @@ type GetRes = {
 }
 
 export async function publishPost(req: PublishReq, handler: ResponseHandler<PublishRes, ErrRes>) {
-    await sendRequest("post", "api/post", req, handler);
+    await sendRequest("post", "/api/post", req, handler);
 }
 export async function getPost(req: ActionReq, handler: ResponseHandler<GetRes, ErrRes>) {
-    await sendRequest("get", `api/post/${req.postId}`, {}, handler,
+    await sendRequest("get", `/api/post/${req.postId}`, {}, handler,
         (v) => ({ ...v, created: new Date(v.created) })
     );
 }
 export async function deletePost(req: ActionReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
-    await sendRequest("delete", `api/post/${req.postId}`, {}, handler);
+    await sendRequest("delete", `/api/post/${req.postId}`, {}, handler);
 }
 export async function loadPosts(req: LoadReq, handler: ResponseHandler<LoadRes, ErrRes>) {
-    await sendRequest("post", "api/post/load-list", req, handler,
+    await sendRequest("post", "/api/post/load-list", req, handler,
         (v) => {
             for (const post of v.posts)
                 post.created = new Date(post.created);
@@ -99,5 +99,5 @@ export async function loadPosts(req: LoadReq, handler: ResponseHandler<LoadRes, 
     );
 }
 export async function ratePost(req: RateReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
-    await sendRequest("post", `api/post/rate`, req, handler);
+    await sendRequest("post", `/api/post/rate`, req, handler);
 }

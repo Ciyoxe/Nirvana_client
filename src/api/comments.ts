@@ -43,13 +43,13 @@ type LoadRes = {
 
 
 export async function getComment(req: ActionReq, handler: ResponseHandler<LoadRes, ErrRes>) {
-    await sendRequest("get", `api/comment/${req.commentId}`, {}, handler);
+    await sendRequest("get", `/api/comment/${req.commentId}`, {}, handler);
 }
 export async function publishComment(req: PublishReq, handler: ResponseHandler<PublishRes, ErrRes>) {
-    await sendRequest("post", "api/comment", req, handler);
+    await sendRequest("post", "/api/comment", req, handler);
 }
 export async function loadComments(req: LoadReq, handler: ResponseHandler<LoadRes, ErrRes>) {
-    await sendRequest("get", "api/comment/load-list", req, handler, 
+    await sendRequest("post", "/api/comment/load-list", req, handler, 
         (v) => {
             for (const comment of v.comments)
                 comment.created = new Date(comment.created);
@@ -58,5 +58,5 @@ export async function loadComments(req: LoadReq, handler: ResponseHandler<LoadRe
     );
 }
 export async function rateComment(req: rateReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
-    await sendRequest("post", "api/comment/rate", req, handler);
+    await sendRequest("post", "/api/comment/rate", req, handler);
 }
