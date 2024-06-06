@@ -21,7 +21,6 @@ const state    = reactive({
     avatar       : "",
     banner       : "",
     about        : "",
-    valid        : false,
 
     errorDialog  : false,
     errorText    : "",
@@ -155,7 +154,7 @@ watchEffect(()=> {
     <VCard>
         <VCardTitle>Создание профиля</VCardTitle>
         <VCardText>
-            <VForm ref="form" v-model="state.valid">
+            <VForm ref="form">
                 <VTextField :rules="nameValidation"   v-model="state.name"   label="Имя"/>
                 <div class="flex-row" style="align-items: flex-start">
                     <VTextField :rules="lengthValidation" v-model="state.avatar" label="Аватар (введите ссылку)" title="Ссылка на изображение"/>
