@@ -30,7 +30,7 @@ const router  = createRouter({
         { name: "profiles", path: '/profiles', component: ()=> import('@pages/Profiles.vue') },
 
         { name: "chat", path: '/chat/:id', component: ()=> import('@pages/Chat.vue') },
-        { name: "chats", path: '/chats', component: ()=> import('@pages/Chatlist.vue') },
+        { name: "chats", path: '/chats', component: ()=> import('@pages/Chats.vue') },
 
         { name: "anonchat", path: '/anonchat', component: ()=> import('@pages/Anonchat.vue') },
     ]

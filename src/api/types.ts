@@ -21,3 +21,11 @@ export type ProfilePreview = {
     avatar : string | null,
     about  : string | null,
 }
+
+export type ChatPreview = {
+    id       : string,
+    type     : "personal" | "anonymous",
+    name     : string,
+    preview  : string | null,
+    lastDate : Date,
+}

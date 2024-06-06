@@ -1,4 +1,5 @@
 import { sendRequest, ResponseHandler } from "./sendRequest";
+import { ChatPreview } from "./types";
 
 type ActionReq = {
     chatId: string,
@@ -46,13 +47,7 @@ type SendMessageRes = {
 }
 type LoadChatsRes = {
     count: number,
-    chats: {
-        id       : string,
-        type     : "personal" | "anonymous",
-        name     : string,
-        preview  : string | null,
-        lastDate : Date,
-    }[]
+    chats: ChatPreview[]
 }
 type LoadMessagesRes = {
     count    : number,
