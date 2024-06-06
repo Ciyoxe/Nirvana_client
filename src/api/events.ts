@@ -1,3 +1,5 @@
+import { onMounted, onUnmounted } from "vue";
+
 type ServerEvent = {
     id       : string,
     type     : "message",
@@ -13,10 +15,10 @@ class Signal<T = void> {
     private handlers = new Set<(data: T) => void>();
     private onces    = new Array<(data: T) => void>();
 
-    add(handler: (data: T)=> void) {
+    on(handler: (data: T)=> void) {
         this.handlers.add(handler);
     }
-    remove(handler: (data: T)=> void) {
+    off(handler: (data: T)=> void) {
         this.handlers.delete(handler);
     }
     once(handler: (data: T)=> void) {
@@ -35,6 +37,11 @@ class Signal<T = void> {
 export const onNewEvent   = new Signal<ServerEvent>();
 export const onDisconnect = new Signal();
 export const onConnect    = new Signal();
+
+export function useEvents(hanlder: (event: ServerEvent)=> void) {
+    onMounted(()=> onNewEvent.on(hanlder));
+    onUnmounted(()=> onNewEvent.off(hanlder));
+}
 
 const evSrc = new EventSource("/api/event");
 
