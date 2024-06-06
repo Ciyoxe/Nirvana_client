@@ -9,14 +9,6 @@ if (!app.loggedIn) {
     router.replace("/auth");
 }
 
-const events = new EventSource("/api/event");
-events.onmessage = (event) => {
-    app.newEvent(JSON.parse(event.data));
-}
-window.onbeforeunload = () => {
-    events.close();
-}
-
 import Maincont from "@/uiblocks/Maincont.vue";
 </script>
 

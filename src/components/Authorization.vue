@@ -47,9 +47,9 @@ const submit = async ()=> {
     app.setLoading(true);
     if (props.type === "register") {
         let canRegister = false;
-        await userExists(data, {
-            200: (exists) => {
-                if (exists)
+        await userExists({ username: data.username }, {
+            200: (data) => {
+                if (data.exists)
                     error("Такой пользователь уже существует");
                 else
                     canRegister = true;
