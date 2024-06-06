@@ -22,7 +22,6 @@ const usernameValidation = [
     (v: string)=> v.length > 256 ? "Превышена длина текста" : true,
 ];
 const passwordValidation = [
-    (v: string)=> v.length === 0 ? "Пароль не может быть пустым" : true,
     (v: string)=> v.length > 2048 ? "Превышена длина пароля" : true,
     (v: string)=> v.length < 5 ? "Пароль слишком короткий" : true,
 ];
