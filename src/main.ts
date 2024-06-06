@@ -20,15 +20,15 @@ const vuetify = createVuetify({
 const router  = createRouter({
     history: createWebHistory(),
     routes : [
-        { path: '/auth', component: ()=> import('@pages/Login.vue') },
+        { name: "login", path: '/auth', component: ()=> import('@pages/Login.vue') },
         
-        { path: '/profile/:id', component: ()=> import('@pages/Profile.vue') },
-        { path: '/profiles', component: ()=> import('@pages/Profilelist.vue') },
+        { name: "profile", path: '/profile/:id', component: ()=> import('@pages/Profile.vue') },
+        { name: "profiles", path: '/profiles', component: ()=> import('@pages/Profiles.vue') },
 
-        { path: '/chat/:id', component: ()=> import('@pages/Chat.vue') },
-        { path: '/chats', component: ()=> import('@pages/Chatlist.vue') },
+        { name: "chat", path: '/chat/:id', component: ()=> import('@pages/Chat.vue') },
+        { name: "chats", path: '/chats', component: ()=> import('@pages/Chatlist.vue') },
 
-        { path: '/anonchat', component: ()=> import('@pages/Anonchat.vue') },
+        { name: "anonchat", path: '/anonchat', component: ()=> import('@pages/Anonchat.vue') },
     ]
 });
 

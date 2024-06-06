@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import Loading from '@components/Loading.vue';
-
 import { useAppStore } from '@stores/app';
 import { useRouter } from "vue-router";
 
@@ -10,10 +8,6 @@ const router = useRouter();
 if (!app.loggedIn) {
     router.replace("/auth");
 }
-else
-if (app.profileId === null) {
-    router.replace("/profiles");
-}
 
 const events = new EventSource("/api/event");
 events.onmessage = (event) => {
@@ -22,11 +16,14 @@ events.onmessage = (event) => {
 window.onbeforeunload = () => {
     events.close();
 }
+
+import Maincont from "@/uiblocks/Maincont.vue";
 </script>
 
 <template>
-    <Loading/>
-    <RouterView/>
+<Maincont>
+    <RouterView></RouterView>
+</Maincont>
 </template>
 
 <style scoped>
