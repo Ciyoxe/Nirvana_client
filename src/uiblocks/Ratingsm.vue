@@ -30,7 +30,8 @@ const vote = (dir: "up" | "down")=> {
         variant="outlined"
         :color="rating < 0 ? 'error' : 'success'"
     >
-      {{ rating < 0 ? '-' : '+' }} {{ Math.round(Math.abs(rating)) }}
+        {{ Math.round(rating) < 0 ? "-" : (Math.round(rating) === 0 ? "" : "+") }}
+        {{ Math.round(Math.abs(rating)) }}
     </VChip>
     
     <VBtn small tile v-if="editable" :icon="mdiPlus"  color="success" class="btn" @click="vote('up')" />

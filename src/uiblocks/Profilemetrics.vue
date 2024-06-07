@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import Rating from '@uiblocks/Ratingsm.vue';
-
 defineProps<{
     info: {
         self      : boolean,
         role      : string,
+        posts     : number,
         rating    : number,
         following : number,
         followers : number,
@@ -15,22 +14,31 @@ defineProps<{
 
 <template>
 <div class="info flex-row">
-    <div class="info-cell">
-        <Rating :rating="info.rating" :editable="!info.self" class="info-content"/>
+    <VCard variant="outlined" class="info-cell">
+        <div class="info-content">
+           {{ Math.round(info.rating) < 0 ? "-" : (Math.round(info.rating) === 0 ? "" : "+") }}
+           {{ Math.round(Math.abs(info.rating)) }}
+        </div>
         Рейтинг
-    </div>
-    <div class="info-cell">
+    </VCard>
+    <VCard variant="outlined" class="info-cell">
+        <div class="info-content">
+            {{ info.posts }}
+        </div>
+        Посты
+    </VCard>
+    <VCard variant="outlined" class="info-cell">
         <div class="info-content">
             {{ info.following }}
         </div>
         Подписки
-    </div>
-    <div class="info-cell">
+    </VCard>
+    <VCard variant="outlined" class="info-cell">
         <div class="info-content">
             {{ info.followers }}
         </div>
         Подписчики
-    </div>
+    </VCard>
 </div>
 </template>
 
@@ -46,8 +54,6 @@ defineProps<{
     font-size: 0.8rem;
     align-content: center;
     text-align: center;
-
-    border: 2px solid var(--back-col-3);
     border-radius: 10px;
 }
 .info-content {

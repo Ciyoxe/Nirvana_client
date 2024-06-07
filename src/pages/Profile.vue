@@ -2,22 +2,23 @@
 import { reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { sendRequest } from '@/utils';
+import { createChat } from '@/api/chats';
 import Profilemetrics from '@uiblocks/Profilemetrics.vue';
-
-import Head from '@components/Head.vue';
+import Ratingsm from '@uiblocks/Ratingsm.vue';
+import { blockUser, getProfile, unblockUser, subscribe, unsubscribe } from '@/api/profiles';
 
 const router    = useRouter();
 const profileId = useRoute().params.id;
 const state     = reactive({
     info: null as null | {
         self        : boolean,
+        posts       : 0,
         about       : string | null,
         name        : string,
         avatar      : string | null,
         banner      : string | null,
-        created     : string,
-        online      : string,
+        created     : Date,
+        online      : Date,
         role        : "user" | "admin",
         rating      : number,
         following   : number,
@@ -25,15 +26,22 @@ const state     = reactive({
         isFollowing : boolean,
         isBlocked   : boolean,
     },
+
+    error    : false,
+    errorText: "",
 });
 
+const error = (text: string)=> {
+    state.error     = true;
+    state.errorText = text;
+}
 const lastOnlineStatus = computed(() => {
     if (!state.info)
         return "В сети: неизвестно";
 
-    const diffMinutes = (Date.now() - new Date(state.info.online).getTime()) / 1000 / 60;
+    const diffMinutes = (Date.now() - state.info.online.getTime()) / 1000 / 60;
     
-    if (diffMinutes < 1)
+    if (diffMinutes < 10)
         return "Онлайн";
     if (diffMinutes < 20)
         return "В сети несколько минут назад"
@@ -54,47 +62,82 @@ const lastOnlineStatus = computed(() => {
     return "В сети давно"
 });
 
-const createChat = () => {
-    sendRequest("post", "/api/chat/personal", { profileId }, {
-        200: (json) => {
-            router.push(`/chat/${json.chatId}`);
-        }
+const makeChat = () => {
+    if (!profileId)
+        return;
+
+    createChat({ profileId: profileId as string }, {
+        200: (data)=> router.push('/chat/' + data.chatId),
+        '_': ()=> error("Ошибка создания чата, повторите попытку позже")
     });
 };
+const toggleBlock = () => {
+    if (state.info!.isBlocked) {
+        unblockUser({ profileId: profileId as string }, {
+            200: ()=> state.info!.isBlocked = false,
+            '_': ()=> error("Произошла ошибка, повторите попытку позже")
+        });
+    } 
+    else{
+        blockUser({ profileId: profileId as string }, {
+            200: ()=> state.info!.isBlocked = true,
+            '_': ()=> error("Произошла ошибка, повторите попытку позже")
+        });
+    }
+}
+const toggleFollowing = () => {
+    if (state.info!.isFollowing) {
+        unsubscribe({ profileId: profileId as string }, {
+            200: ()=> state.info!.isFollowing = false,
+            '_': ()=> error("Произошла ошибка, повторите попытку позже")
+        });
+    } 
+    else{
+        subscribe({ profileId: profileId as string }, {
+            200: ()=> state.info!.isFollowing = true,
+            '_': ()=> error("Произошла ошибка, повторите попытку позже")
+        });
+    }
+}
 
-sendRequest("post", "/api/profile/get-info", { profileId }, {
-    200: (json) => {
-        state.info = json;
-    },
+getProfile({ profileId: profileId as string }, {
+    200: (data)=> state.info = { ...data, posts: 0 },
 });
 </script>
 
 <template>
-<Head/>
-<main class="flex-col panel-2 main-cont">
-    <div class="banner" v-if="state.info" :style="{ backgroundImage: `url('${state.info.banner}')` }">
-        <div class="avatar" :style="{ backgroundImage: `url('${state.info.avatar}')` }"></div>
-    </div>
-    <div class="content" v-if="state.info">
-        <div class="head flex-row">
-            <div class="flex-col">
-                <span class="name">{{ state.info.name }}</span> <br>
-                <span class="status" :style="{ color: lastOnlineStatus === 'Онлайн' ? 'var(--pos-col)' : 'var(--text-col-normal)' }">{{ lastOnlineStatus }}</span>
-            </div>
-            <div class="controls">
-                <button @click="createChat()" v-if="!state.info.self && !state.info.isBlocked">Написать</button>
-                <button v-if="!state.info.self && !state.info.isBlocked">{{ state.info.isFollowing ? 'Отписаться' : 'Подписаться' }}</button>
-                <button v-if="!state.info.self">{{ state.info.isBlocked ? 'Разблокировать' : 'Заблокировать' }}</button>
-                <button v-if="state.info.self">Редактировать</button>
-            </div>
+<div class="banner" v-if="state.info" :style="{ backgroundImage: `url('${state.info.banner}')` }">
+    <div class="avatar" :style="{ backgroundImage: `url('${state.info.avatar}')` }"></div>
+</div>
+<div class="content" v-if="state.info">
+    <div class="head flex-row">
+        <div class="flex-col">
+            <span class="name">{{ state.info.name }}
+                <Ratingsm :rating="state.info.rating" />
+            </span>
+            <br>
+            <span class="status" :style="{ color: lastOnlineStatus === 'Онлайн' ? '' : '' }">{{ lastOnlineStatus }}</span>
         </div>
-        
-        <div class="line"></div>
-        <Profilemetrics :info="state.info"/>
-        <div class="line"></div>
-        Постов еще не опубликовано
+        <div class="controls">
+            <VBtn v-if="!state.info.self && !state.info.isBlocked" @click="makeChat()">Написать</VBtn>
+            <VBtn v-if="!state.info.self && !state.info.isBlocked" @click="toggleFollowing()">{{ state.info.isFollowing ? 'Отписаться' : 'Подписаться' }}</VBtn>
+            <VBtn v-if="!state.info.self" @click="toggleBlock()">{{ state.info.isBlocked ? 'Разблокировать' : 'Заблокировать' }}</VBtn>
+            <VBtn v-if="state.info.self">Редактировать</VBtn>
+        </div>
     </div>
-</main>
+    
+    <div class="line"></div>
+    <Profilemetrics :info="state.info"/>
+    <div class="line"></div>
+    Постов еще не опубликовано
+</div>
+<VEmptyState v-if="!state.info"
+    headline="Профиль не найден"
+    title="Возможно он был удалён или заблокирован"
+/>
+<VSnackbar v-model="state.error" color="error" timeout="3000" rounded="lg">
+    {{ state.errorText }}
+</VSnackbar>
 </template>
 
 <style scoped lang="scss">
@@ -172,7 +215,6 @@ sendRequest("post", "/api/profile/get-info", { profileId }, {
 }
 .line {
     height: 2px;
-    background: var(--back-col-3);
     margin: 20px 0;
 }
 .controls {

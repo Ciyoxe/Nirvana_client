@@ -71,10 +71,10 @@ export async function unsubscribe(req: ActionReq, handler: ResponseHandler<Succe
 export async function unsubscribeAll(handler: ResponseHandler<SuccessRes, ErrRes>) {
     await sendRequest("post", `/api/profile/unsubscribe-all`, {}, handler);
 }
-export async function block(req: ActionReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
+export async function blockUser(req: ActionReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
     await sendRequest("post", `/api/profile/block`, req, handler);
 }
-export async function unblock(req: ActionReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
+export async function unblockUser(req: ActionReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
     await sendRequest("post", `/api/profile/unblock`, req, handler);
 }
 export async function unblockAll(handler: ResponseHandler<SuccessRes, ErrRes>) {
