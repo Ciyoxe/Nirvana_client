@@ -1,14 +1,16 @@
 import { onMounted, onUnmounted } from "vue";
 
 type ServerEvent = {
-    id       : string,
-    type     : "message",
-    senderId : string | null,
-    chatId   : string,
-    text     : string,
+    id         : string,
+    type       : "message",
+    senderId   : string | null,
+    senderName : string,
+    chatId     : string,
+    created    : Date,
+    text       : string,
 } | {
-    type     : "anon-chat-enter" | "anon-chat-finished",
-    chatId   : string,
+    type       : "anon-chat-enter" | "anon-chat-finished",
+    chatId     : string,
 };
 
 class Signal<T = void> {
@@ -52,7 +54,12 @@ evSrc.onopen = () => {
     onConnect.emit();
 }
 evSrc.onmessage = (event) => {
-    onNewEvent.emit(JSON.parse(event.data));
+    const eventData = JSON.parse(event.data);
+    // map date from str
+    if (eventData.type === "message") {
+        eventData.created = new Date(eventData.created);
+    }
+    onNewEvent.emit(eventData);
 }
 window.addEventListener("beforeunload", () => {
     evSrc.close();   
