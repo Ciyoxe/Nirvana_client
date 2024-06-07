@@ -26,9 +26,12 @@ const error = (text: string)=> {
 const enterQueue = ()=> {
     if (chats.anonParams === null)
         return;
+    chats.anonStatus = "inQueue"
     enterAnonQueue(chats.anonParams, {
-        200: ()=> chats.anonStatus = "inQueue",
-        '_': ()=> error("Произошла ошибка входа в очередь, повторите попытку позже")
+        '_': ()=> {
+            error("Произошла ошибка входа в очередь, повторите попытку позже");
+            chats.anonStatus = "inParams";
+        }
     });
 }
 const exitQueue = ()=> {
@@ -84,7 +87,6 @@ useEvents((event)=> {
         });
     }
 });
-
 // load messages if we are returning in old one chat
 onMounted(()=> {
     if (chats.anonStatus !== "inChat" || chats.anonChatId === null)
