@@ -8,7 +8,7 @@ import { useAppStore } from "@stores/app";
 import { uploadFile } from "@/api/files";
 
 import { VBtn } from "vuetify/components";
-import Profilelist from "@/uiblocks/Profilelist.vue";
+import Profilelist from "@/components/Profilelist.vue";
 
 
 const profiles = useProfilesStore();

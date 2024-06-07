@@ -5,7 +5,7 @@ import { Message } from '@/api/types';
 import { mdiBackspace, mdiSend } from '@mdi/js';
 import { reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import Messagelist from '@uiblocks/Messagelist.vue';
+import Messagelist from '@components/Messagelist.vue';
 
 const route = useRoute();
 const state = reactive({

@@ -4,14 +4,14 @@ import Header from './Header.vue';
 
 <template>
 <VApp class="main">
-    <VLayout width="100%" full-height>
-        <Header></Header>
-        <VMain class="main-cont flex-col">
+    <div class="flex-col main app-cont">
+        <Header/>
+        <VMain class="main-cont main flex-col">
             <VSheet class="main-sheet" elevation="10" height="100%">
                 <slot></slot>
             </VSheet>
         </VMain>
-    </VLayout>
+    </div>
 </VApp>
 </template>
 
@@ -20,12 +20,15 @@ import Header from './Header.vue';
     height : 100%;
     width  : 100%;
 }
+.app-cont {
+    padding: 10px;
+    padding-top: 0;
+}
 .main-cont {
-    margin      : 10px;
-    margin-top  : 0;
     align-items : center;
 }
 .main-sheet {
+    overflow-y: scroll;
     width: 100%;
     padding: 10px;
     max-width: 1000px;

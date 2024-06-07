@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Ratingsm from '@uiblocks/Ratingsm.vue';
+import Ratingsm from '@components/Ratingsm.vue';
 
 import { onMounted, reactive, watchEffect } from 'vue';
 import { getProfile  } from '@/api/profiles';

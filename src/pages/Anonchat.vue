@@ -3,11 +3,11 @@ import { enterAnonQueue, leaveAnonChat, leaveAnonQueue, loadMessages, sendMessag
 import { Message } from '@/api/types';
 import { useChatsStore } from '@stores/chats';
 import { onMounted, reactive } from 'vue';
-import Anonsettings from '@/uiblocks/Anonsettings.vue';
+import Anonsettings from '@/components/Anonsettings.vue';
 import { useEvents } from '@/api/events';
-import Messagelist from '@uiblocks/Messagelist.vue';
+import Messagelist from '@components/Messagelist.vue';
 import { mdiSend, mdiBackspace } from '@mdi/js';
-import Chatfeedback from '@/uiblocks/Chatfeedback.vue';
+import Chatfeedback from '@/components/Chatfeedback.vue';
 
 const chats = useChatsStore();
 const state = reactive({

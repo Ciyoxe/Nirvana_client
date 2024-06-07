@@ -4,7 +4,6 @@ import { createVuetify } from 'vuetify'
 import { aliases, mdi  } from 'vuetify/iconsets/mdi-svg';
 import { createRouter, createWebHistory } from "vue-router";
 import 'vuetify/styles'
-import './normalize.css'
 import './style.scss'
 
 import App from './App.vue'

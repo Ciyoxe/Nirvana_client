@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watchEffect } from 'vue';
 import { useChatsStore } from '@stores/chats';
-import Chatlist from '@uiblocks/Chatlist.vue';
+import Chatlist from '@components/Chatlist.vue';
 import { loadChats } from '@/api/chats';
 import { useAppStore } from '@stores/app';
 

@@ -3,8 +3,8 @@ import { reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { createChat } from '@/api/chats';
-import Profilemetrics from '@uiblocks/Profilemetrics.vue';
-import Ratingsm from '@uiblocks/Ratingsm.vue';
+import Profilemetrics from '@components/Profilemetrics.vue';
+import Ratingsm from '@components/Ratingsm.vue';
 import { blockUser, getProfile, unblockUser, subscribe, unsubscribe } from '@/api/profiles';
 
 const router    = useRouter();

@@ -9,7 +9,7 @@ if (!app.loggedIn) {
     router.replace("/auth");
 }
 
-import Maincont from "@/uiblocks/Maincont.vue";
+import Maincont from "@/components/Maincont.vue";
 </script>
 
 <template>
