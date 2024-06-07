@@ -1,169 +1,144 @@
 <script setup lang="ts">
+import { enterAnonQueue, leaveAnonChat, leaveAnonQueue, loadMessages, sendMessage } from '@/api/chats';
+import { Message } from '@/api/types';
+import { useChatsStore } from '@stores/chats';
+import { onMounted, reactive } from 'vue';
+import Anonsettings from '@/uiblocks/Anonsettings.vue';
+import { useEvents } from '@/api/events';
+import Messagelist from '@uiblocks/Messagelist.vue';
+import { mdiSend, mdiBackspace } from '@mdi/js';
+import Chatfeedback from '@/uiblocks/Chatfeedback.vue';
 
-import Head from '@components/Head.vue';
-import Rating from '@uiblocks/Rating.vue';
-
-import { sendRequest } from '@/utils';
-import { useAppStore } from '@stores/app';
-import { useRouter   } from 'vue-router';
-import { reactive } from 'vue';
-
-const router = useRouter();
-const app    = useAppStore();
-
+const chats = useChatsStore();
 const state = reactive({
-    searching: false,
-});
-const user = reactive({
-    rating: null as number | null,
-    gender: null as "m" | "f" | null,
-    age   : null as number | null,
-});
-const filter = reactive({
-    gender    : null as "m" | "f" | null,
-    minAge    : null as number | null,
-    maxAge    : null as number | null,
-    minRating : null as number | null,
-    maxRating : null as number | null,
+    messages     : [] as Message[],
+    chatFinished : false,
+    messageText  : "",
+
+    error        : false,
+    errorText    : "",
 });
 
-app.setLoading(true);
-sendRequest("get", "/api/profile/" + app.profileId, {}, {
-    200: (json) => {
-        app.setLoading(false);
-        user.rating = json.rating;
-    },
-    '_': () => {
-        
-    }
-})
-
-const getAge = (event: Event, fn: (v: number | null) => void)=> {
-    const value = (event.target as HTMLInputElement).value;
-    const age   = parseInt(value);
-    fn(isNaN(age) || age < 0 || age > 99 ? null : age);
+const error = (text: string)=> {
+    state.error     = true;
+    state.errorText = text;
 }
-const getRating = (event: Event, fn: (v: number | null) => void)=> {
-    const value = (event.target as HTMLInputElement).value;
-    const rating = parseInt(value);
-    fn(isNaN(rating) || rating < -10 || rating > 10 ? null : rating);
-}
-const startChat = ()=> {
-    state.searching = true;
-    sendRequest("post", "/api/chat/anonymous/enter-queue", {
-        filter,
-        gender: user.gender,
-        age   : user.age,
-    }, { });
-};
-const cancelChat = ()=> {
-    sendRequest("post", "/api/chat/anonymous/leave-queue", {}, {
-        200: () => {
-            state.searching = false;
-        }
+const enterQueue = ()=> {
+    if (chats.anonParams === null)
+        return;
+    enterAnonQueue(chats.anonParams, {
+        200: ()=> chats.anonStatus = "inQueue",
+        '_': ()=> error("Произошла ошибка входа в очередь, повторите попытку позже")
     });
-};
-app.useEvents(event => {
-    if (event.type === "anon-chat-enter") {
-        state.searching = false;
-        router.push(`/chat/${event.chatId}`);
+}
+const exitQueue = ()=> {
+    leaveAnonQueue({
+        '_': ()=> error("Произошла ошибка сервера")
+    });
+    chats.anonStatus = "inParams";
+}
+const exitChat = ()=> {
+    if (chats.anonStatus !== "inChat")
+        return;
+    if (chats.anonChatId === null)
+        return;
+    
+    leaveAnonChat({ chatId: chats.anonChatId }, {
+        200: ()=> state.chatFinished = true,
+        '_': ()=> error("Произошла ошибка, повторите попытку позже")
+    });
+}
+const goParams = ()=> {
+    chats.anonStatus = "inParams";
+}
+const send = ()=> {
+    if (chats.anonStatus !== "inChat")
+        return;
+    if (chats.anonChatId === null)
+        return;
+    
+    sendMessage({ chatId: chats.anonChatId, text: state.messageText }, {
+        200: ()=> state.messageText = "",
+        '_': ()=> error("Произошла ошибка, повторите попытку позже")
+    });
+}
+
+useEvents((event)=> {
+    if (event.type == 'anon-chat-enter') {
+        chats.anonStatus   = "inChat";
+        state.chatFinished = false;
+        state.messages     = [];
     }
+    if (event.type == 'anon-chat-finished') {
+        state.chatFinished = true;
+        // not setting chats.anonStatus cause feedback will be displayed
+    }
+    if (event.type == 'message' && event.chatId === chats.anonChatId) {
+        state.messages.push({
+            id         : event.id,
+            text       : event.text,
+            sender     : event.senderId,
+            created    : event.created,
+            senderName : event.senderName,
+        });
+    }
+});
+
+// load messages if we are returning in old one chat
+onMounted(()=> {
+    if (chats.anonStatus !== "inChat" || chats.anonChatId === null)
+        return;
+    loadMessages({ chatId: chats.anonChatId as any, count: 100, offset: 0 }, {
+        200: (data)=> state.messages = data.messages,
+        '_': ()=> error("Произошла ошибка загрузки сообщений, повторите попытку позже")
+    });
 });
 </script>
 
 <template>
-<Head/>
-<main class="flex-col panel-2 main-cont">
-    <h1>
-        Анонимный чат
-    </h1>
-    <div class="flex-col" style="gap: 10px" v-if="!state.searching">
-        <h3>
-            Ваши параметры
-        </h3>
-        <span>
-            Рейтинг:
-            <Rating :rating="user.rating ?? -10"></Rating>
-        </span>
-        Пол:
-        <div class="buttons">
-            <button :class="{ active: user.gender === null }" @click="user.gender = null; filter.gender = null">Не указан</button>
-            <button :class="{ active: user.gender === 'm'  }" @click="user.gender = 'm' ">М</button>
-            <button :class="{ active: user.gender === 'f'  }" @click="user.gender = 'f' ">Ж</button>
-        </div>
-        Возраст:
-        <input type="number" min="0" max="99" 
-            @input="getAge($event, a => { user.age = a; if (a === null) { filter.minAge = null; filter.maxAge = null; } })"
-        >
+<Anonsettings v-if="chats.anonStatus === 'inParams'" @start="enterQueue()"/>
 
-        <h3>
-            Параметры собеседника
-        </h3>
-        Пол:
-        <div class="buttons">
-            <button :disabled="user.gender === null" :class="{ active: filter.gender === null }" @click="filter.gender = null">Любой</button>
-            <button :disabled="user.gender === null" :class="{ active: filter.gender === 'm'  }" @click="filter.gender = 'm' ">М</button>
-            <button :disabled="user.gender === null" :class="{ active: filter.gender === 'f'  }" @click="filter.gender = 'f' ">Ж</button>
-        </div>
+<VEmptyState v-if="chats.anonStatus === 'inQueue'" headline="Поиск собеседника ...">
+    <VBtn @click="exitQueue()">Отмена</VBtn>
+</VEmptyState>
 
-        Возраст:
-        <div class="flex-row" style="align-items: center; gap: 10px;">
-            от
-            <input 
-                type="number" min="0" max="99" style="flex: 1; min-width: 0;" 
-                @input="getAge($event, a => filter.minAge = a)" 
-                :value="filter.minAge"
-                :disabled="user.age === null"
-            >
-            до
-            <input type="number" min="0" max="99" style="flex: 1; min-width: 0;"
-                @input="getAge($event, a => filter.maxAge = a)" 
-                :value="filter.maxAge"
-                :disabled="user.age === null"
-            >
-        </div>
-
-        Рейтинг:
-        <div class="flex-row" style="align-items: center; gap: 10px;">
-            от
-            <input type="number" min="-10" max="10" @input="getRating($event, a => filter.minRating = a)" style="flex: 1; min-width: 0;" :value="filter.minRating">
-            до
-            <input type="number" min="-10" max="10" @input="getRating($event, a => filter.maxRating = a)" style="flex: 1; min-width: 0;" :value="filter.maxRating">
-        </div>
-        <div style="height: 20px;"></div>
-
-        <button @click="startChat()">Начать чат</button>
+<div class="flex-col anonchat-cont" v-if="chats.anonStatus === 'inChat'">
+    <div class="flex-row anonchat-header elevation-5" v-if="!state.chatFinished">
+        Чат найден! Общайтесь
+        <VBtn @click="exitChat()" color="error">Завершить</VBtn>
     </div>
-    <div v-else class="flex-col" style="gap: 20px">
-        <h2>
-            Поиск собеседника ...
-        </h2>
-        <button @click="cancelChat()">Отмена</button>
+    <Messagelist :messages="state.messages"/>
+
+    <div class="flex-row text" v-if="!state.chatFinished">
+        <VTextarea no-resize label="Сообщение" density="compact" rounded="lg" v-model="state.messageText"></VTextarea>
+        <div class="flex-col btns">
+            <VBtn @click="send()" :icon="mdiSend"></VBtn>
+            <VBtn @click="state.messageText = ''" :icon="mdiBackspace"></VBtn>
+        </div>
     </div>
-</main>
+    <Chatfeedback @next-chat="enterQueue()" @to-params="goParams()" v-else/>
+</div>
+
+
+<VSnackbar v-model="state.error" color="error" timeout="3000" rounded="lg">
+    {{ state.errorText }}
+</VSnackbar>
 </template>
 
 <style scoped lang="scss">
-main {
-   gap: 20px; 
+.anonchat-header {
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
 }
-h2 {
-    text-align: center;
+.anonchat-cont {
+    height: 100%;
 }
-.buttons > button {
-    border-radius: 0;
-    min-width: 100px;
-
-    &:first-child {
-        border-radius: 10px 0 0 10px;
-        border-right: 0;
-    }
-    &:last-child {
-        border-radius: 0 10px 10px 0;
-        border-left: 0;
-    }
-    &.active {
-        background-color: var(--accent-col-2);
-    }
+.text {
+    padding-top: 10px;
+}
+.btns {
+    gap: 5px;
+    padding-left: 10px;
 }
 </style>

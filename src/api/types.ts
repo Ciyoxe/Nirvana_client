@@ -36,3 +36,14 @@ export type Message = {
     senderName : string,
     created    : Date,
 }
+export type AnonSettings = {
+    gender  : "m" | "f" | null,
+    age     : number | null,
+    filter: {
+        gender    : "m" | "f" | null,
+        minAge    : number | null,
+        maxAge    : number | null,
+        minRating : number | null,
+        maxRating : number | null,
+    },
+};

@@ -48,10 +48,11 @@ const error = (text: string)=> {
 <template>
 <div v-if="chats.userChats.length > 0">
     <h2>Ваши чаты:</h2>
-    <VAlert v-if="chats.inAnonChat"
+    <VAlert v-if="chats.anonStatus === 'inChat'"
         @click="$router.push('/anonchat')" 
         type="info" 
         rounded="lg"
+        variant="tonal"
         title="У вас есть активный анонимный чат" 
         style="user-select: none;"
     >

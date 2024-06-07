@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Rating from '@/uiblocks/Rating.vue';
+import Rating from '@uiblocks/Ratingsm.vue';
 
 defineProps<{
     info: {

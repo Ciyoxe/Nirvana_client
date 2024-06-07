@@ -17,7 +17,7 @@ const vuetify = createVuetify({
         sets: { mdi },
     },
     theme: {
-        defaultTheme: 'light'
+        defaultTheme: 'dark'
     }
 });
 const router  = createRouter({

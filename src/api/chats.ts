@@ -1,5 +1,5 @@
 import { sendRequest, ResponseHandler } from "./sendRequest";
-import { ChatPreview, Message } from "./types";
+import { AnonSettings, ChatPreview, Message } from "./types";
 
 type ActionReq = {
     chatId: string,
@@ -19,17 +19,6 @@ type LoadMessagesReq = {
 };
 type CreatePersChatReq = {
     profileId: string,
-};
-type EnterAnonChatReq = {
-    gender  : "m" | "f" | null,
-    age     : number | null,
-    filter: {
-        gender    : "m" | "f" | null,
-        minAge    : number | null,
-        maxAge    : number | null,
-        minRating : number | null,
-        maxRating : number | null,
-    },
 };
 type RateAnonChatReq = {
     chatId : string,
@@ -73,7 +62,7 @@ export async function createChat(req: CreatePersChatReq, handler: ResponseHandle
 export async function deleteChat(req: ActionReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
     await sendRequest("delete", `/api/chat/personal/${req.chatId}`, {}, handler);
 }
-export async function enterAnonQueue(req: EnterAnonChatReq, handler: ResponseHandler<SuccessRes, ErrRes>) {
+export async function enterAnonQueue(req: AnonSettings, handler: ResponseHandler<SuccessRes, ErrRes>) {
     await sendRequest("post", "/api/chat/anonymous/enter-queue", req, handler);
 }
 export async function leaveAnonQueue(handler: ResponseHandler<SuccessRes, ErrRes>) {

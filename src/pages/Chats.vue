@@ -25,10 +25,15 @@ loadChats({ count: 100, offset: 0 }, {
 
 watchEffect(()=> {
     const anonChat = chats.userChats.find(c => c.type === "anonymous");
-    if (anonChat)
-        chats.enterAnonChat(anonChat.id);
-    else
-        chats.exitAnonChat();
+    if (anonChat) {
+        chats.anonChatId = anonChat.id;
+        chats.anonStatus = 'inChat';
+    }
+    else {
+        chats.anonChatId = null;
+        if (chats.anonStatus === 'inChat')
+            chats.anonStatus = 'inParams';
+    }
 });
 </script>
 
