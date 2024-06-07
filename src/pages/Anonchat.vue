@@ -65,11 +65,12 @@ const send = ()=> {
 
 useEvents((event)=> {
     if (event.type == 'anon-chat-enter') {
+        chats.anonChatId   = event.chatId;
         chats.anonStatus   = "inChat";
         state.chatFinished = false;
         state.messages     = [];
     }
-    if (event.type == 'anon-chat-finished') {
+    if (event.type == 'anon-chat-finished' && event.chatId === chats.anonChatId) {
         state.chatFinished = true;
         // not setting chats.anonStatus cause feedback will be displayed
     }

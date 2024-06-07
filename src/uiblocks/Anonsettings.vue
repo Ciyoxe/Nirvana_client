@@ -83,7 +83,7 @@ onMounted(()=> {
 watchEffect(()=> {
     if (user.rating === null)
         return;
-    if (filter.rating[0] > user.rating - 2)
+    if (filter.rating[0] > Math.round(user.rating) - 2)
         filter.rating[0] = Math.max(minRating, user.rating - 2);
 })
 </script>

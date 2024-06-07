@@ -19,14 +19,18 @@ export const useProfilesStore = defineStore("profiles", {
 
 
 // profile syncronization across tabs
-setInterval(() => {
+const store     = useProfilesStore();
+const syncStore = ()=> {
     const currentProfileId = localStorage.getItem("profileId");
 
     if (currentProfileId === null)
         return;
 
     if (currentProfileId === "")
-        useProfilesStore().setCurrentProfile(null);
+        store.setCurrentProfile(null);
     else
-        useProfilesStore().setCurrentProfile(currentProfileId);
-}, 5_000);
+        store.setCurrentProfile(currentProfileId);
+
+    setTimeout(syncStore, 5_000);
+}
+syncStore();
