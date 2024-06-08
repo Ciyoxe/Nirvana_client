@@ -33,7 +33,7 @@ const router  = createRouter({
 
         { name: "anonchat", path: '/anonchat', component: ()=> import('@pages/Anonchat.vue') },
 
-        { name: "post", path: '/post/:id', component: ()=> import('@pages/Posts.vue') },
+        { name: "post", path: '/post/:id', component: ()=> import('@pages/Post.vue') },
         { name: "posts", path: '/posts', component: ()=> import('@pages/Posts.vue') },
         { name: "editor", path: '/editor', component: ()=> import('@pages/Postedit.vue') },
     ]

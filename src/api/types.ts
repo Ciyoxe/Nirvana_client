@@ -66,20 +66,22 @@ export type ContentImage = {
 export type Content = (ContentText | ContentImage)[];
 
 export type Post = {
-    created : Date,
-    author  : string,
-    header  : string,
-    about   : string | null,
-    rating  : number,
-    public  : boolean,
-    content : Content,
+    created    : Date,
+    author     : string,
+    authorName : string,
+    header     : string,
+    about      : string | null,
+    rating     : number,
+    public     : boolean,
+    content    : Content,
 }
 
 export type PostPreview = {
-    id      : string,
-    author  : string,
-    header  : string,
-    about   : string | null,
-    created : Date,
-    rating  : number,
+    id         : string,
+    author     : string,
+    header     : string,
+    authorName : string,
+    about      : string | null,
+    created    : Date,
+    rating     : number,
 }

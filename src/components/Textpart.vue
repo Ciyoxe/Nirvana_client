@@ -48,7 +48,7 @@ const extractContent = (ev: Event)=> {
 
 <style scoped lang="scss">
 span {
-    padding       : 10px 5px;
+    padding       : 2px 5px;
     overflow-wrap : break-word;
     text-wrap     : balance;
     width         : 100%;
