@@ -47,3 +47,39 @@ export type AnonSettings = {
         maxRating : number | null,
     },
 };
+
+export type ContentText = {
+    type: "text",
+    text: string,
+    size: number,
+    color: string | null,
+    align: "left" | "center" | "right",
+    style: "normal" | "bold" | "underline" | "italic" | "strikethrough",
+}
+
+export type ContentImage = {
+    type: "image",
+    file: string,
+    desc: string,
+}
+
+export type Content = (ContentText | ContentImage)[];
+
+export type Post = {
+    created : Date,
+    author  : string,
+    header  : string,
+    about   : string | null,
+    rating  : number,
+    public  : boolean,
+    content : Content,
+}
+
+export type PostPreview = {
+    id      : string,
+    author  : string,
+    header  : string,
+    about   : string | null,
+    created : Date,
+    rating  : number,
+}

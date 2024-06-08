@@ -16,7 +16,7 @@ const vuetify = createVuetify({
         sets: { mdi },
     },
     theme: {
-        defaultTheme: 'dark'
+        defaultTheme: 'light'
     }
 });
 const router  = createRouter({
@@ -32,6 +32,10 @@ const router  = createRouter({
         { name: "chats", path: '/chats', component: ()=> import('@pages/Chats.vue') },
 
         { name: "anonchat", path: '/anonchat', component: ()=> import('@pages/Anonchat.vue') },
+
+        { name: "post", path: '/post/:id', component: ()=> import('@pages/Posts.vue') },
+        { name: "posts", path: '/posts', component: ()=> import('@pages/Posts.vue') },
+        { name: "editor", path: '/editor', component: ()=> import('@pages/Postedit.vue') },
     ]
 });
 

@@ -1,21 +1,11 @@
 import { sendRequest, ResponseHandler } from "./sendRequest";
+import { Content, Post, PostPreview } from "./types";
 
 type PublishReq = {
-    about: string | null,
-    public: boolean,
-    header: string,
-    content: ({
-        type: "image",
-        file: string,
-        desc: string,
-    } | {
-        type: "text",
-        text: string,
-        size: number,
-        color: string | null,
-        align: "left" | "center" | "right",
-        style: "normal" | "bold" | "underline" | "italic" | "strikethrough",
-    })[]
+    about   : string | null,
+    public  : boolean,
+    header  : string,
+    content : Content,
 }
 type ActionReq = {
     postId: string,
@@ -48,40 +38,13 @@ type PublishRes = {
 }
 type LoadRes = {
     count: number,
-    posts: {
-        id      : string,
-        author  : string,
-        header  : string,
-        about   : string | null,
-        created : Date,
-        rating  : number,
-    }[]
-}
-type GetRes = {
-    created : Date,
-    author  : string,
-    header  : string,
-    about   : string | null,
-    rating  : number,
-    public  : boolean,
-    content : ({
-        type: "image",
-        file: string,
-        desc: string,
-    } | {
-        type: "text",
-        text: string,
-        size: number,
-        color: string | null,
-        align: "left" | "center" | "right",
-        style: "normal" | "bold" | "underline" | "italic" | "strikethrough",
-    })[],
+    posts: PostPreview[]
 }
 
 export async function publishPost(req: PublishReq, handler: ResponseHandler<PublishRes, ErrRes>) {
     await sendRequest("post", "/api/post", req, handler);
 }
-export async function getPost(req: ActionReq, handler: ResponseHandler<GetRes, ErrRes>) {
+export async function getPost(req: ActionReq, handler: ResponseHandler<Post, ErrRes>) {
     await sendRequest("get", `/api/post/${req.postId}`, {}, handler,
         (v) => ({ ...v, created: new Date(v.created) })
     );
