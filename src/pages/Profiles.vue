@@ -28,7 +28,3 @@ getProfilesList({
 <Profilescontrol/>
 <VSnackbar v-model="state.error" color="error" timeout="3000" rounded="lg">"Произошла ошибка получения списка профилей, повторите попытку позже"</VSnackbar>
 </template>
-
-<style scoped lang="scss">
-
-</style>

@@ -5,6 +5,3 @@ import Authorization from '@components/Authorization.vue';
 <template>
 <Authorization :type="$route.name === 'login' ? 'login' : 'register'"/>
 </template>
-
-<style scoped>
-</style>
