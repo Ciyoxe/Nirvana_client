@@ -123,7 +123,7 @@ const publish = async ()=> {
         <VBtn v-if="state.parts[state.activePart] !== undefined" :append-icon="mdiDelete" @click="delPart()">Удалить текст</VBtn>
     </div>
     <div class="flex-col list">
-        <Textpart v-for="(part, i) in state.parts" editable :content="part" @click="state.activePart = i"/>
+        <Textpart v-for="(part, i) in state.parts" editable :content="part" @click="state.activePart = i" @update="state.parts[state.activePart].text = $event"/>
     </div>
 </VForm>
 
