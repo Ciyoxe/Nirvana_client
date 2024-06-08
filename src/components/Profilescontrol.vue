@@ -9,8 +9,10 @@ import { uploadFile } from "@/api/files";
 
 import { VBtn } from "vuetify/components";
 import Profilelist from "@/components/Profilelist.vue";
+import { useRouter } from "vue-router";
 
 
+const router   = useRouter();
 const profiles = useProfilesStore();
 const app      = useAppStore();
 
@@ -58,6 +60,7 @@ const submitCreation = async ()=> {
             if (profiles.currentProfileId === null) {
                 profiles.setCurrentProfile(profile.profileId);
             }
+            state.createDialog = false;
         },
         '_': () => {
             error("Произошла ошибка создания профиля, повторите попытку позже");
@@ -71,6 +74,7 @@ const error = (text: string)=> {
 const selectProfile = (profileId: string)=> {
     profiles.userProfiles.forEach(profile => profile.active = profile._id === profileId);
     profiles.setCurrentProfile(profileId);
+    router.push(`/profile/${profileId}`);
 }
 const deleteProfile = (profileId: string, activeId: string | null)=> {
     profiles.userProfiles = profiles.userProfiles.filter(profile => profile._id !== profileId);
