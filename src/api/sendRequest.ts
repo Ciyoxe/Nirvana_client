@@ -1,13 +1,35 @@
+import { Signal } from "./signal";
+
 export type ResponseHandler<TOk, TErr> =  {
     200?: (json: TOk) => void,
-
-    429?: (err: TErr) => void,
-    404?: (err: TErr) => void,
-    400?: (err: TErr) => void,
-    
-    /** any error */
     _?  : (status: number, err: TErr | null)=> void, 
 };
+
+export const onResponse = new Signal<{ status: number, data: any }>();
+
+async function processReq<T, U>(
+    hanlder: ResponseHandler<T, U>,
+    res: Response,
+    mapper?: (data: any)=> T,
+) {
+    let jsonData = null;
+    try {
+        jsonData = await res.json();
+    } catch { }
+
+
+    switch (res.status) {
+        case 200:
+            jsonData = mapper ? mapper(jsonData) : jsonData;
+            onResponse.emit({ status: 200, data: jsonData });
+            hanlder[200]?.(jsonData);
+            break;
+        default:
+            onResponse.emit({ status: res.status, data: jsonData });
+            hanlder._?.(res.status, jsonData);
+    }
+}
+
 
 export async function sendRequest<TOk, TErr>(
     method  : string, 
@@ -23,72 +45,18 @@ export async function sendRequest<TOk, TErr>(
         },
         body: method === "get" ? undefined : JSON.stringify(data)
     });
-
-    try {
-        const json = await res.json();
-
-        switch (res.status) {
-            case 200:
-                if (mapper)
-                    handler[200]?.(mapper(json));
-                else
-                    handler[200]?.(json);
-                break
-            case 429:
-                handler[429]?.(json);
-                handler._?.(res.status, json);
-                break;
-            case 404:
-                handler[404]?.(json);
-                handler._?.(res.status, json);
-                break;
-            case 400:
-                handler[400]?.(json);
-                handler._?.(res.status, json);
-                break;
-            default:
-                handler._?.(res.status, json);
-        }
-    } 
-    catch (_) {
-        handler._?.(res.status, null);
-    };
+    processReq(handler, res, mapper);
 }
 export async function sendFormdata<TOk, TErr>(
     method  : string, 
     url     : string, 
     data    : FormData, 
-    handler : ResponseHandler<TOk, TErr>
+    handler : ResponseHandler<TOk, TErr>,
+    mapper? : (data: any)=> TOk,
 ) {
     const res = await fetch(url, {
         method,
         body: data
     });
-
-    try {
-        const json = await res.json();
-
-        switch (res.status) {
-            case 200:
-                handler[200]?.(json);
-                break
-            case 429:
-                handler[429]?.(json);
-                handler._?.(res.status, json);
-                break;
-            case 404:
-                handler[404]?.(json);
-                handler._?.(res.status, json);
-                break;
-            case 400:
-                handler[400]?.(json);
-                handler._?.(res.status, json);
-                break;
-            default:
-                handler._?.(res.status, json);
-        }
-    } 
-    catch (_) {
-        handler._?.(res.status, null);
-    };
+    processReq(handler, res, mapper);
 }
