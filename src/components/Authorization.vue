@@ -58,6 +58,7 @@ const submit = async ()=> {
         });
         if (canRegister) {
             await register(data, {
+                200: () => app.setLoggedIn(true),
                 '_': () => error("Произошла ошибка регистрации, повторите попытку позже")
             });
         }
@@ -65,6 +66,7 @@ const submit = async ()=> {
     // type == login
     else {
         await login(data, {
+            200: () => app.setLoggedIn(true),
             '_': () => error("Произошла ошибка входа, повторите попытку позже")
         });
     }
